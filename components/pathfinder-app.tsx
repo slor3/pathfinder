@@ -26,10 +26,12 @@ export function PathfinderApp() {
   const [savedReports, setSavedReports] = useState<SavedReport[]>([])
   const [savedCurrent, setSavedCurrent] = useState(false)
 
-  // Hydrate persisted state on mount.
+  // Hydrate persisted state after mount — localStorage is not available during SSR.
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- client-only storage hydrate */
     setProfile(loadProfile())
     setSavedReports(loadSavedReports())
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [])
 
   const activeProfile = useMemo(() => profile, [profile])

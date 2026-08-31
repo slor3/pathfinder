@@ -1,3 +1,7 @@
+# Single-package app; this file holds pnpm 10+ settings (not a monorepo).
+minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   - '@next/*'
   - next
+onlyBuiltDependencies:
+  - unrs-resolver

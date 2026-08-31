@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Jira — PathFinder (PAT)
+    url: https://alensuvalic.atlassian.net/jira/software/projects/PAT/board
+    about: Track stories and bugs in Jira, not GitHub Issues.
