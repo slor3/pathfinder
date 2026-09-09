@@ -2,9 +2,14 @@
 
 Decision-support app for students who are unsure about college or a major.
 
-PathFinder uses short real-life scenarios instead of a traditional survey. After eight questions, it shows a college-fit prompt, a strengths snapshot, suggested majors, and nearby colleges. **It is a small push in a direction you might already want to go — not a verdict on your life or a substitute for advisors.**
+PathFinder uses short real-life scenarios instead of a traditional survey. After eight questions, it shows a college-fit prompt, a strengths snapshot, suggested majors, and nearby colleges.
 
 **Live demo:** [https://pathfinder-iota-mauve.vercel.app/](https://pathfinder-iota-mauve.vercel.app/)
+
+## Team
+
+- Sean Lor
+- Alen Suvalic
 
 ## Stack
 
@@ -50,7 +55,3 @@ No `.env` is required for the current prototype. Copy `.env.example` to `.env.lo
 | `lib/pathfinder-data.ts` | Scenarios, majors, colleges, trait labels |
 | `lib/recommend.ts` | Scoring and ranking |
 | `lib/storage.ts` | Saved reports in `localStorage` |
-
-## Disclaimer
-
-PathFinder is not the de facto guide to anyone’s success. Reports are suggestions to talk over with people you trust, then retake or ignore as your goals change.

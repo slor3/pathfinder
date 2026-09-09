@@ -14,4 +14,3 @@
 ## Notes
 
 - [ ] Guest can still finish the quiz without an account
-- [ ] Report still reads as a suggestion, not a life verdict
