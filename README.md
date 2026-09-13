@@ -52,6 +52,7 @@ No `.env` is required for the current prototype. Copy `.env.example` to `.env.lo
 | --- | --- |
 | `app/` | Next.js app shell |
 | `components/` | Landing, profile, quiz, and report screens |
+| `docs/scoring.md` | PAT-13: every quiz option → RIASEC, traits, path |
 | `lib/pathfinder-data.ts` | Scenarios, majors, colleges, trait labels |
 | `lib/recommend.ts` | Scoring and ranking |
 | `lib/storage.ts` | Saved reports in `localStorage` |
