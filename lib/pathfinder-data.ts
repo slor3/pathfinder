@@ -17,26 +17,14 @@ export const TRAIT_LABELS: Record<Trait, string> = {
 
 export type PathSignal = "structured" | "applied" | "entrepreneurial"
 
-/** Holland / O*NET Interest Profiler theme. Options are rewritten situations, not copied IP items. */
 export type Riasec = "R" | "I" | "A" | "S" | "E" | "C"
-
-export const RIASEC_LABELS: Record<Riasec, string> = {
-  R: "Realistic",
-  I: "Investigative",
-  A: "Artistic",
-  S: "Social",
-  E: "Enterprising",
-  C: "Conventional",
-}
-
 export type ScenarioOption = {
   id: string
   label: string
   traits: Partial<Record<Trait, number>>
   path: PathSignal
-  riasec: Riasec
-  /** Interest-area theme (not a copied Interest Profiler item). */
-  onetTheme: string
+  riasec?: Riasec
+  onetTheme?: string
 }
 
 export type Scenario = {
@@ -47,7 +35,7 @@ export type Scenario = {
 }
 
 export const SCENARIOS: Scenario[] = [
-  {
+{
     id: "makerspace-leftover",
     situation:
       "A school makerspace left a half-finished project on the bench: parts in a bin, a rough sketch on the wall, and two hours before the room closes.",
@@ -361,7 +349,269 @@ export const SCENARIOS: Scenario[] = [
       },
     ],
   },
+{
+    id: "unknown-problem",
+    situation:
+      "You're handed a problem you've never seen before, with no clear first step and a deadline that isn't far off.",
+    prompt: "What's your first move?",
+    options: [
+      {
+        id: "break-down",
+        label: "Break it into parts and tackle one piece at a time.",
+        traits: { analytical: 2, investigative: 1 },
+        path: "structured",
+      },
+      {
+        id: "research",
+        label: "Research how similar problems were solved before.",
+        traits: { investigative: 2, analytical: 1 },
+        path: "structured",
+      },
+      {
+        id: "ask-others",
+        label: "Ask other people for input and think it through together.",
+        traits: { social: 2, leadership: 1 },
+        path: "entrepreneurial",
+      },
+      {
+        id: "experiment",
+        label: "Start experimenting hands-on until something works.",
+        traits: { handsOn: 2, creative: 1 },
+        path: "applied",
+      },
+    ],
+  },
+  {
+    id: "free-saturday",
+    situation: "You have a completely free Saturday and a little bit of money to spend.",
+    prompt: "What sounds the most fun?",
+    options: [
+      {
+        id: "build",
+        label: "Build or fix something in the real world.",
+        traits: { handsOn: 2, creative: 1 },
+        path: "applied",
+      },
+      {
+        id: "puzzle",
+        label: "Dig into a puzzle, game, or a topic you're curious about.",
+        traits: { investigative: 2, analytical: 1 },
+        path: "structured",
+      },
+      {
+        id: "create",
+        label: "Make art, music, writing, or design something.",
+        traits: { creative: 2, investigative: 1 },
+        path: "entrepreneurial",
+      },
+      {
+        id: "hangout",
+        label: "Organize a hangout and spend time with people.",
+        traits: { social: 2, leadership: 1 },
+        path: "entrepreneurial",
+      },
+    ],
+  },
+  {
+    id: "group-project",
+    situation: "Your group project is falling behind and everyone is looking around unsure what to do.",
+    prompt: "You naturally end up...",
+    options: [
+      {
+        id: "lead",
+        label: "Taking charge and assigning who does what.",
+        traits: { leadership: 2, social: 1 },
+        path: "entrepreneurial",
+      },
+      {
+        id: "plan",
+        label: "Mapping out a clear plan and timeline for everyone.",
+        traits: { analytical: 2, leadership: 1 },
+        path: "structured",
+      },
+      {
+        id: "support",
+        label: "Quietly helping teammates and keeping the peace.",
+        traits: { social: 2, handsOn: 1 },
+        path: "applied",
+      },
+      {
+        id: "solve",
+        label: "Focusing on solving the hardest technical piece yourself.",
+        traits: { investigative: 2, analytical: 1 },
+        path: "structured",
+      },
+    ],
+  },
+  {
+    id: "praise",
+    situation: "Think about the last time someone genuinely thanked you for something.",
+    prompt: "It was most likely because you...",
+    options: [
+      {
+        id: "explained",
+        label: "Explained something confusing in a way that finally clicked.",
+        traits: { social: 2, analytical: 1 },
+        path: "structured",
+      },
+      {
+        id: "fixed",
+        label: "Fixed or made something that actually worked.",
+        traits: { handsOn: 2, investigative: 1 },
+        path: "applied",
+      },
+      {
+        id: "idea",
+        label: "Came up with an original idea nobody else thought of.",
+        traits: { creative: 2, leadership: 1 },
+        path: "entrepreneurial",
+      },
+      {
+        id: "organized",
+        label: "Organized chaos into something that ran smoothly.",
+        traits: { leadership: 2, analytical: 1 },
+        path: "structured",
+      },
+    ],
+  },
+  {
+    id: "learning-style",
+    situation: "You need to learn a brand new skill for something important.",
+    prompt: "How do you learn it best?",
+    options: [
+      {
+        id: "course",
+        label: "A structured course with lessons, steps, and feedback.",
+        traits: { analytical: 2, investigative: 1 },
+        path: "structured",
+      },
+      {
+        id: "doing",
+        label: "Jumping in and learning by doing it for real.",
+        traits: { handsOn: 2, creative: 1 },
+        path: "applied",
+      },
+      {
+        id: "mentor",
+        label: "Finding a mentor or people who already do it.",
+        traits: { social: 2, leadership: 1 },
+        path: "entrepreneurial",
+      },
+      {
+        id: "deep-read",
+        label: "Reading and researching until you deeply understand it.",
+        traits: { investigative: 2, analytical: 1 },
+        path: "structured",
+      },
+    ],
+  },
+  {
+    id: "dream-impact",
+    situation: "Imagine yourself ten years from now, proud of your work.",
+    prompt: "What are you most proud of?",
+    options: [
+      {
+        id: "helped-people",
+        label: "You've directly helped a lot of people's lives.",
+        traits: { social: 2, leadership: 1 },
+        path: "structured",
+      },
+      {
+        id: "built-thing",
+        label: "You built something real that people use every day.",
+        traits: { handsOn: 2, creative: 1 },
+        path: "applied",
+      },
+      {
+        id: "discovered",
+        label: "You discovered or figured out something new.",
+        traits: { investigative: 2, analytical: 1 },
+        path: "structured",
+      },
+      {
+        id: "own-thing",
+        label: "You built your own company or run your own thing.",
+        traits: { leadership: 2, creative: 1 },
+        path: "entrepreneurial",
+      },
+    ],
+  },
+  {
+    id: "money-vs-passion",
+    situation: "You're choosing between two job offers after school.",
+    prompt: "Which pull is stronger for you?",
+    options: [
+      {
+        id: "stable",
+        label: "The stable, well-paid, clearly-defined role.",
+        traits: { analytical: 2, handsOn: 1 },
+        path: "structured",
+      },
+      {
+        id: "meaning",
+        label: "The role where you'd help people, even for less pay.",
+        traits: { social: 2, investigative: 1 },
+        path: "structured",
+      },
+      {
+        id: "growth",
+        label: "The risky role with huge growth and learning potential.",
+        traits: { leadership: 2, creative: 1 },
+        path: "entrepreneurial",
+      },
+      {
+        id: "flexible",
+        label: "The flexible role that lets you work with your hands and skills.",
+        traits: { handsOn: 2, creative: 1 },
+        path: "applied",
+      },
+    ],
+  },
+  {
+    id: "school-feeling",
+    situation: "Be honest about how you feel about traditional classrooms.",
+    prompt: "Which statement fits you best?",
+    options: [
+      {
+        id: "love-school",
+        label: "I do well in school and like structured learning.",
+        traits: { analytical: 2, investigative: 1 },
+        path: "structured",
+      },
+      {
+        id: "okay-school",
+        label: "School is fine, but I learn more when it's practical.",
+        traits: { handsOn: 2, social: 1 },
+        path: "applied",
+      },
+      {
+        id: "restless",
+        label: "I get restless and would rather be doing real work.",
+        traits: { handsOn: 2, leadership: 1 },
+        path: "applied",
+      },
+      {
+        id: "self-driven",
+        label: "I'd rather teach myself and build things my own way.",
+        traits: { creative: 2, leadership: 1 },
+        path: "entrepreneurial",
+      },
+    ],
+  }
 ]
+
+export const QUIZ_SIZE = 8
+
+export function getRandomizedQuizQuestions(): Scenario[] {
+  const shuffled = [...SCENARIOS]
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1))
+    ;[shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]]
+  }
+
+  return shuffled.slice(0, QUIZ_SIZE)
+}
 
 export type Cluster =
   | "stem"

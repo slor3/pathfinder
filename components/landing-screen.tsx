@@ -51,7 +51,9 @@ export function LandingScreen({ onStart, savedReports, onViewSaved }: Props) {
               Start the quiz
               <ArrowRight className="size-4" aria-hidden />
             </Button>
-            <span className="text-sm text-muted-foreground">Takes about 3 minutes · 8 questions</span>
+            <span className="text-sm text-muted-foreground">
+              Takes about 3 minutes · 8 questions · No account required
+            </span>
           </div>
         </div>
 

@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { ArrowLeft, ArrowRight, Check } from "lucide-react"
-import { SCENARIOS } from "@/lib/pathfinder-data"
+import { getRandomizedQuizQuestions, QUIZ_SIZE } from "@/lib/pathfinder-data"
 import type { Answers } from "@/lib/recommend"
 
 type Props = {
@@ -17,8 +17,9 @@ export function QuizScreen({ initial, onComplete, onExit }: Props) {
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState<Answers>(initial)
 
-  const scenario = SCENARIOS[index]
-  const total = SCENARIOS.length
+  const questions = useMemo(() => getRandomizedQuizQuestions(), [])
+  const scenario = questions[index]
+  const total = QUIZ_SIZE
   const selected = answers[scenario.id]
   const isLast = index === total - 1
 
@@ -61,6 +62,9 @@ export function QuizScreen({ initial, onComplete, onExit }: Props) {
           {scenario.situation}
         </p>
         <p className="mt-4 font-display text-lg font-semibold">{scenario.prompt}</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          There is no right answer — choose the first move that feels most like you.
+        </p>
 
         <div className="mt-5 grid gap-3" role="radiogroup" aria-label={scenario.prompt}>
           {scenario.options.map((opt) => {

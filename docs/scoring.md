@@ -118,3 +118,105 @@ Situation: Picture yourself ten years from now, proud of the work you do most we
 | E Enterprising | 4 |
 | C Conventional | 5 |
 | **Total** | **32** |
+
+## Original PathFinder scenarios
+
+These eight scenarios are also included in `lib/pathfinder-data.ts`.
+
+## Scenario 9 — unknown problem
+
+Situation: You're handed a problem you've never seen before, with no clear first step and a deadline that isn't far off.  
+Prompt: What's your first move?
+
+| Option id | User-facing text | Traits | Path |
+| --- | --- | --- | --- |
+| `break-down` | Break it into parts and tackle one piece at a time. | analytical 2, investigative 1 | structured |
+| `research` | Research how similar problems were solved before. | investigative 2, analytical 1 | structured |
+| `ask-others` | Ask other people for input and think it through together. | social 2, leadership 1 | entrepreneurial |
+| `experiment` | Start experimenting hands-on until something works. | handsOn 2, creative 1 | applied |
+
+## Scenario 10 — free saturday
+
+Situation: You have a completely free Saturday and a little bit of money to spend.  
+Prompt: What sounds the most fun?
+
+| Option id | User-facing text | Traits | Path |
+| --- | --- | --- | --- |
+| `build` | Build or fix something in the real world. | handsOn 2, creative 1 | applied |
+| `puzzle` | Dig into a puzzle, game, or a topic you're curious about. | investigative 2, analytical 1 | structured |
+| `create` | Make art, music, writing, or design something. | creative 2, investigative 1 | entrepreneurial |
+| `hangout` | Organize a hangout and spend time with people. | social 2, leadership 1 | entrepreneurial |
+
+## Scenario 11 — group project
+
+Situation: Your group project is falling behind and everyone is looking around unsure what to do.  
+Prompt: You naturally end up...
+
+| Option id | User-facing text | Traits | Path |
+| --- | --- | --- | --- |
+| `lead` | Taking charge and assigning who does what. | leadership 2, social 1 | entrepreneurial |
+| `plan` | Mapping out a clear plan and timeline for everyone. | analytical 2, leadership 1 | structured |
+| `support` | Quietly helping teammates and keeping the peace. | social 2, handsOn 1 | applied |
+| `solve` | Focusing on solving the hardest technical piece yourself. | investigative 2, analytical 1 | structured |
+
+## Scenario 12 — praise
+
+Situation: Think about the last time someone genuinely thanked you for something.  
+Prompt: It was most likely because you...
+
+| Option id | User-facing text | Traits | Path |
+| --- | --- | --- | --- |
+| `explained` | Explained something confusing in a way that finally clicked. | social 2, analytical 1 | structured |
+| `fixed` | Fixed or made something that actually worked. | handsOn 2, investigative 1 | applied |
+| `idea` | Came up with an original idea nobody else thought of. | creative 2, leadership 1 | entrepreneurial |
+| `organized` | Organized chaos into something that ran smoothly. | leadership 2, analytical 1 | structured |
+
+## Scenario 13 — learning style
+
+Situation: You need to learn a brand new skill for something important.  
+Prompt: How do you learn it best?
+
+| Option id | User-facing text | Traits | Path |
+| --- | --- | --- | --- |
+| `course` | A structured course with lessons, steps, and feedback. | analytical 2, investigative 1 | structured |
+| `doing` | Jumping in and learning by doing it for real. | handsOn 2, creative 1 | applied |
+| `mentor` | Finding a mentor or people who already do it. | social 2, leadership 1 | entrepreneurial |
+| `deep-read` | Reading and researching until you deeply understand it. | investigative 2, analytical 1 | structured |
+
+## Scenario 14 — dream impact
+
+Situation: Imagine yourself ten years from now, proud of your work.  
+Prompt: What are you most proud of?
+
+| Option id | User-facing text | Traits | Path |
+| --- | --- | --- | --- |
+| `helped-people` | You've directly helped a lot of people's lives. | social 2, leadership 1 | structured |
+| `built-thing` | You built something real that people use every day. | handsOn 2, creative 1 | applied |
+| `discovered` | You discovered or figured out something new. | investigative 2, analytical 1 | structured |
+| `own-thing` | You built your own company or run your own thing. | leadership 2, creative 1 | entrepreneurial |
+
+## Scenario 15 — money vs. passion
+
+Situation: You're choosing between two job offers after school.  
+Prompt: Which pull is stronger for you?
+
+| Option id | User-facing text | Traits | Path |
+| --- | --- | --- | --- |
+| `stable` | The stable, well-paid, clearly-defined role. | analytical 2, handsOn 1 | structured |
+| `meaning` | The role where you'd help people, even for less pay. | social 2, investigative 1 | structured |
+| `growth` | The risky role with huge growth and learning potential. | leadership 2, creative 1 | entrepreneurial |
+| `flexible` | The flexible role that lets you work with your hands and skills. | handsOn 2, creative 1 | applied |
+
+## Scenario 16 — school feeling
+
+Situation: Be honest about how you feel about traditional classrooms.  
+Prompt: Which statement fits you best?
+
+| Option id | User-facing text | Traits | Path |
+| --- | --- | --- | --- |
+| `love-school` | I do well in school and like structured learning. | analytical 2, investigative 1 | structured |
+| `okay-school` | School is fine, but I learn more when it's practical. | handsOn 2, social 1 | applied |
+| `restless` | I get restless and would rather be doing real work. | handsOn 2, leadership 1 | applied |
+| `self-driven` | I'd rather teach myself and build things my own way. | creative 2, leadership 1 | entrepreneurial |
+
+The quiz shuffles all 16 scenarios and presents eight per run. `generateReport()` scores answers from whichever eight were shown.
