@@ -56,3 +56,4 @@ No `.env` is required for the current prototype. Copy `.env.example` to `.env.lo
 | `lib/pathfinder-data.ts` | Scenarios, majors, colleges, trait labels |
 | `lib/recommend.ts` | Scoring and ranking |
 | `lib/storage.ts` | Saved reports in `localStorage` |
+| `docs/ggc-onet-research.md` | Georgia Gwinnett College and O*NET program-mapping research |
