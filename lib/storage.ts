@@ -1,4 +1,4 @@
-import type { Answers, Report } from "./recommend"
+import type { Answers, PathwayAnswers, Report } from "./recommend"
 import type { Region } from "./pathfinder-data"
 
 export type Profile = {
@@ -12,6 +12,7 @@ export type SavedReport = {
   createdAt: number
   profile: Profile
   answers: Answers
+  pathwayAnswers?: PathwayAnswers
   report: Report
 }
 

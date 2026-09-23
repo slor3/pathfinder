@@ -2,11 +2,12 @@
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { ArrowRight, Compass, GraduationCap, MapPin, Sparkles, Target } from "lucide-react"
+import { ArrowRight, BookOpen, Compass, GraduationCap, MapPin, Sparkles, Target } from "lucide-react"
 import type { SavedReport } from "@/lib/storage"
 
 type Props = {
   onStart: () => void
+  onResearch: () => void
   savedReports: SavedReport[]
   onViewSaved: (id: string) => void
 }
@@ -29,7 +30,7 @@ const STEPS = [
   },
 ]
 
-export function LandingScreen({ onStart, savedReports, onViewSaved }: Props) {
+export function LandingScreen({ onStart, onResearch, savedReports, onViewSaved }: Props) {
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 md:py-20">
       <div className="grid items-center gap-10 md:grid-cols-[1.1fr_0.9fr]">
@@ -51,7 +52,13 @@ export function LandingScreen({ onStart, savedReports, onViewSaved }: Props) {
               Start the quiz
               <ArrowRight className="size-4" aria-hidden />
             </Button>
-            <span className="text-sm text-muted-foreground">Takes about 3 minutes · 8 questions</span>
+            <Button size="lg" variant="outline" className="gap-2" onClick={onResearch}>
+              Read the research
+              <BookOpen className="size-4" aria-hidden />
+            </Button>
+            <span className="text-sm text-muted-foreground">
+              Takes about 3 minutes · 8 questions · No account required
+            </span>
           </div>
         </div>
 

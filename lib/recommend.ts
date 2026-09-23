@@ -13,12 +13,17 @@ import {
 const TRAITS: Trait[] = ["analytical", "creative", "social", "handsOn", "leadership", "investigative"]
 
 export type Answers = Record<string, string> // scenarioId -> optionId
+export type PathwayAnswers = {
+  educationGoal: "degree-required" | "practical-skills" | "explore" | "unsure"
+  learningPreference: "structured" | "applied" | "mixed" | "unsure"
+  commitment: "several-years" | "shorter-first" | "work-first" | "unsure"
+}
 
 export type MajorMatch = { major: Major; score: number }
 export type CollegeMatch = { college: College; score: number }
 
 export type PathRecommendation = {
-  key: PathSignal
+  key: PathSignal | "mixed"
   title: string
   summary: string
 }
@@ -32,7 +37,7 @@ export type Report = {
   colleges: CollegeMatch[]
 }
 
-const PATH_COPY: Record<PathSignal, { title: string; summary: string }> = {
+const PATH_COPY: Record<PathSignal | "mixed", { title: string; summary: string }> = {
   structured: {
     title: "A 4-year college is a strong fit",
     summary:
@@ -48,9 +53,18 @@ const PATH_COPY: Record<PathSignal, { title: string; summary: string }> = {
     summary:
       "You're driven, independent, and people-oriented. College can absolutely help, but choose it deliberately — for a specific goal, network, or skill — rather than by default.",
   },
+  mixed: {
+    title: "Your college-fit signals are mixed",
+    summary:
+      "Your answers point in more than one direction. Explore programs and learning environments that combine structure, hands-on practice, and flexibility before deciding.",
+  },
 }
 
-export function generateReport(answers: Answers, region: Region): Report {
+export function generateReport(
+  answers: Answers,
+  region: Region,
+  pathwayAnswers?: PathwayAnswers,
+): Report {
   // 1. Tally trait scores and path signals from answers.
   const raw: Record<Trait, number> = {
     analytical: 0,
@@ -101,9 +115,24 @@ export function generateReport(answers: Answers, region: Region): Report {
     .slice(0, 4)
 
   // 4. Determine the recommended path.
-  const pathKey = (Object.keys(pathBreakdown) as PathSignal[]).sort(
+  const rankedPaths = (Object.keys(pathBreakdown) as PathSignal[]).sort(
     (a, b) => pathBreakdown[b] - pathBreakdown[a],
-  )[0]
+  )
+  const leadingPath = rankedPaths[0]
+  const scenarioPath =
+    pathBreakdown[leadingPath] - pathBreakdown[rankedPaths[1]] >= 2
+      ? leadingPath
+      : "mixed"
+  const pathKey =
+    pathwayAnswers?.educationGoal === "degree-required" ||
+    pathwayAnswers?.learningPreference === "structured" ||
+    pathwayAnswers?.commitment === "several-years"
+      ? "structured"
+      : pathwayAnswers?.educationGoal === "practical-skills" ||
+          pathwayAnswers?.commitment === "shorter-first" ||
+          pathwayAnswers?.commitment === "work-first"
+        ? "applied"
+        : scenarioPath
 
   // 5. Recommend colleges in the chosen region that offer the top clusters.
   const topClusters = new Set<Cluster>(majorMatches.map((m) => m.major.cluster))
@@ -112,11 +141,11 @@ export function generateReport(answers: Answers, region: Region): Report {
       const overlap = college.clusters.filter((c) => topClusters.has(c)).length
       // Boost colleges whose type matches the recommended path.
       const typeBonus =
-        (pathKey === "structured" && college.type === "University") ||
-        (pathKey === "applied" &&
+        ((leadingPath === "structured" && college.type === "University") ||
+        (leadingPath === "applied" &&
           (college.type === "Community College" || college.type === "Trade School"))
           ? 1.5
-          : 0
+          : 0)
       const score = overlap + typeBonus + college.rating / 5
       return { college, score }
     })

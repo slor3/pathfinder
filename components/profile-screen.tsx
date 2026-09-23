@@ -44,6 +44,9 @@ export function ProfileScreen({ initial, onContinue, onBack }: Props) {
       <p className="mt-2 text-muted-foreground">
         We use this to tailor your report and find colleges near you.
       </p>
+      <p className="mt-2 text-sm text-muted-foreground">
+        No account is needed — finish the scenarios to see your report.
+      </p>
 
       <Card className="mt-6 space-y-5 p-6">
         <div className="space-y-2">

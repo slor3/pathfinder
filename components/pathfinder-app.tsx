@@ -6,7 +6,8 @@ import { LandingScreen } from "./landing-screen"
 import { ProfileScreen } from "./profile-screen"
 import { QuizScreen } from "./quiz-screen"
 import { ReportScreen } from "./report-screen"
-import { generateReport, type Answers, type Report } from "@/lib/recommend"
+import { ResearchScreen } from "./research-screen"
+import { generateReport, type Answers, type PathwayAnswers, type Report } from "@/lib/recommend"
 import {
   loadProfile,
   loadSavedReports,
@@ -16,12 +17,13 @@ import {
   type SavedReport,
 } from "@/lib/storage"
 
-type Stage = "landing" | "profile" | "quiz" | "report"
+type Stage = "landing" | "research" | "profile" | "quiz" | "report"
 
 export function PathfinderApp() {
   const [stage, setStage] = useState<Stage>("landing")
   const [profile, setProfile] = useState<Profile | null>(null)
   const [answers, setAnswers] = useState<Answers>({})
+  const [pathwayAnswers, setPathwayAnswers] = useState<PathwayAnswers | undefined>()
   const [report, setReport] = useState<Report | null>(null)
   const [savedReports, setSavedReports] = useState<SavedReport[]>([])
   const [savedCurrent, setSavedCurrent] = useState(false)
@@ -46,10 +48,11 @@ export function PathfinderApp() {
     setStage("quiz")
   }
 
-  function handleQuizComplete(finalAnswers: Answers) {
+  function handleQuizComplete(finalAnswers: Answers, finalPathwayAnswers: PathwayAnswers) {
     if (!profile) return
     setAnswers(finalAnswers)
-    const generated = generateReport(finalAnswers, profile.region)
+    setPathwayAnswers(finalPathwayAnswers)
+    const generated = generateReport(finalAnswers, profile.region, finalPathwayAnswers)
     setReport(generated)
     setSavedCurrent(false)
     setStage("report")
@@ -62,6 +65,7 @@ export function PathfinderApp() {
       createdAt: Date.now(),
       profile,
       answers,
+      pathwayAnswers,
       report,
     }
     setSavedReports(saveReport(entry))
@@ -70,6 +74,7 @@ export function PathfinderApp() {
 
   function handleRetake() {
     setAnswers({})
+    setPathwayAnswers(undefined)
     setReport(null)
     setSavedCurrent(false)
     setStage("quiz")
@@ -80,6 +85,7 @@ export function PathfinderApp() {
     if (!found) return
     setProfile(found.profile)
     setAnswers(found.answers)
+    setPathwayAnswers(found.pathwayAnswers)
     setReport(found.report)
     setSavedCurrent(true)
     setStage("report")
@@ -110,10 +116,12 @@ export function PathfinderApp() {
         {stage === "landing" && (
           <LandingScreen
             onStart={startFlow}
+            onResearch={() => setStage("research")}
             savedReports={savedReports}
             onViewSaved={viewSaved}
           />
         )}
+        {stage === "research" && <ResearchScreen onBack={() => setStage("landing")} />}
         {stage === "profile" && (
           <ProfileScreen
             initial={activeProfile}
@@ -124,6 +132,7 @@ export function PathfinderApp() {
         {stage === "quiz" && (
           <QuizScreen
             initial={answers}
+            initialPathway={pathwayAnswers}
             onComplete={handleQuizComplete}
             onExit={() => setStage("landing")}
           />
