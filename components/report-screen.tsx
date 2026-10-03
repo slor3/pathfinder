@@ -9,16 +9,15 @@ import {
   ArrowRight,
   Bookmark,
   BookOpen,
-  Briefcase,
   Check,
   GraduationCap,
   MapPin,
   RotateCcw,
-  School,
   Sparkles,
   Star,
+  Users,
 } from "lucide-react"
-import { TRAIT_LABELS, CLUSTER_LABELS, type CollegeType } from "@/lib/pathfinder-data"
+import { TRAIT_LABELS, CLUSTER_LABELS } from "@/lib/pathfinder-data"
 import type { Report } from "@/lib/recommend"
 import type { Profile } from "@/lib/storage"
 
@@ -31,10 +30,14 @@ type Props = {
   onHome: () => void
 }
 
-const TYPE_ICON: Record<CollegeType, typeof School> = {
-  University: GraduationCap,
-  "Community College": School,
-  "Trade School": Briefcase,
+function formatTuition(amount: number | null): string {
+  if (amount === null) return "N/A"
+  return `$${amount.toLocaleString()}/yr`
+}
+
+function formatCompletionRate(rate: number | null): string {
+  if (rate === null) return "N/A"
+  return `${Math.round(rate * 100)}%`
 }
 
 export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome }: Props) {
@@ -162,19 +165,18 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold">
             <MapPin className="size-5 text-primary" aria-hidden />
-            Colleges in the {profile.region}
+            Georgia public colleges
           </h2>
           <span className="text-sm text-muted-foreground">Select up to 3 to compare</span>
         </div>
 
         {report.colleges.length === 0 ? (
           <p className="mt-4 text-muted-foreground">
-            No matching schools found in your region yet — try broadening your search.
+            No matching schools found yet — try retaking the quiz with different answers.
           </p>
         ) : (
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {report.colleges.map(({ college }) => {
-              const Icon = TYPE_ICON[college.type]
               const inCompare = compare.includes(college.id)
               return (
                 <div
@@ -186,25 +188,31 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
                       <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
-                        <Icon className="size-4" aria-hidden />
+                        <GraduationCap className="size-4" aria-hidden />
                       </div>
                       <div>
                         <p className="font-medium leading-tight">{college.name}</p>
-                        <p className="text-sm text-muted-foreground">{college.city}</p>
+                        <p className="text-sm text-muted-foreground">{college.city}, GA</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <Star className="size-3.5 fill-accent text-accent" aria-hidden />
-                      {college.rating.toFixed(1)}
+                    <div className="text-right text-sm text-muted-foreground">
+                      <p>{formatCompletionRate(college.completionRate)}</p>
+                      <p className="text-xs">completion</p>
                     </div>
                   </div>
                   <div className="mt-3 flex flex-wrap items-center gap-1.5">
                     <Badge variant="secondary" className="font-normal">
-                      {college.type}
+                      {formatTuition(college.inStateTuition)} in-state
                     </Badge>
                     <Badge variant="outline" className="font-normal text-muted-foreground">
-                      {college.costTier}
+                      {college.stemCipCodes.length} STEM programs
                     </Badge>
+                    {college.studentSize !== null && (
+                      <Badge variant="outline" className="gap-1 font-normal text-muted-foreground">
+                        <Users className="size-3" aria-hidden />
+                        {college.studentSize.toLocaleString()}
+                      </Badge>
+                    )}
                   </div>
                   <button
                     onClick={() => toggleCompare(college.id)}
@@ -243,39 +251,39 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
                   <td className="p-4 text-muted-foreground">Location</td>
                   {compareColleges.map((c) => (
                     <td key={c.id} className="p-4">
-                      {c.city}
+                      {c.city}, GA
                     </td>
                   ))}
                 </tr>
                 <tr className="border-b border-border/60">
-                  <td className="p-4 text-muted-foreground">Type</td>
+                  <td className="p-4 text-muted-foreground">In-state tuition</td>
                   {compareColleges.map((c) => (
                     <td key={c.id} className="p-4">
-                      {c.type}
+                      {formatTuition(c.inStateTuition)}
                     </td>
                   ))}
                 </tr>
                 <tr className="border-b border-border/60">
-                  <td className="p-4 text-muted-foreground">Cost</td>
+                  <td className="p-4 text-muted-foreground">Completion rate</td>
                   {compareColleges.map((c) => (
                     <td key={c.id} className="p-4">
-                      {c.costTier}
+                      {formatCompletionRate(c.completionRate)}
                     </td>
                   ))}
                 </tr>
                 <tr className="border-b border-border/60">
-                  <td className="p-4 text-muted-foreground">Rating</td>
+                  <td className="p-4 text-muted-foreground">Enrollment</td>
                   {compareColleges.map((c) => (
                     <td key={c.id} className="p-4">
-                      {c.rating.toFixed(1)} / 5
+                      {c.studentSize !== null ? c.studentSize.toLocaleString() : "N/A"}
                     </td>
                   ))}
                 </tr>
                 <tr>
-                  <td className="p-4 text-muted-foreground">Programs</td>
+                  <td className="p-4 text-muted-foreground">STEM programs</td>
                   {compareColleges.map((c) => (
                     <td key={c.id} className="p-4">
-                      {c.clusters.map((cl) => CLUSTER_LABELS[cl]).join(", ")}
+                      {c.stemPrograms.map((p) => p.title.replace(/\.$/, "")).join(", ")}
                     </td>
                   ))}
                 </tr>

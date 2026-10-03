@@ -740,142 +740,28 @@ export const CLUSTER_LABELS: Record<Cluster, string> = {
   education: "Education",
 }
 
-export type Region = "Northeast" | "Southeast" | "Midwest" | "Southwest" | "West"
+import gaCollegesData from "./ga-colleges.json"
 
-export const REGIONS: Region[] = ["Northeast", "Southeast", "Midwest", "Southwest", "West"]
+/** PathFinder is scoped to Georgia public 4-year colleges (PAT-17). */
+export type Region = "Georgia"
 
-export type CollegeType = "University" | "Community College" | "Trade School"
+export const GEORGIA_REGION: Region = "Georgia"
+
+export type StemProgram = {
+  code: string
+  title: string
+}
 
 export type College = {
   id: string
   name: string
   city: string
-  region: Region
-  type: CollegeType
-  clusters: Cluster[]
-  costTier: "$" | "$$" | "$$$"
-  rating: number
+  inStateTuition: number | null
+  completionRate: number | null
+  studentSize: number | null
+  stemCipCodes: string[]
+  stemPrograms: StemProgram[]
 }
 
-export const COLLEGES: College[] = [
-  {
-    id: "c1",
-    name: "Riverside State University",
-    city: "Boston, MA",
-    region: "Northeast",
-    type: "University",
-    clusters: ["stem", "business", "social-sciences", "health"],
-    costTier: "$$$",
-    rating: 4.4,
-  },
-  {
-    id: "c2",
-    name: "Harbor Community College",
-    city: "Providence, RI",
-    region: "Northeast",
-    type: "Community College",
-    clusters: ["health", "trades", "business", "education"],
-    costTier: "$",
-    rating: 4.1,
-  },
-  {
-    id: "c3",
-    name: "Metro Institute of Design",
-    city: "New York, NY",
-    region: "Northeast",
-    type: "University",
-    clusters: ["arts", "business"],
-    costTier: "$$$",
-    rating: 4.3,
-  },
-  {
-    id: "c4",
-    name: "Sunbelt University",
-    city: "Atlanta, GA",
-    region: "Southeast",
-    type: "University",
-    clusters: ["business", "stem", "education", "social-sciences"],
-    costTier: "$$",
-    rating: 4.2,
-  },
-  {
-    id: "c5",
-    name: "Gulf Coast Technical College",
-    city: "Tampa, FL",
-    region: "Southeast",
-    type: "Trade School",
-    clusters: ["trades", "health"],
-    costTier: "$",
-    rating: 4.0,
-  },
-  {
-    id: "c6",
-    name: "Great Lakes University",
-    city: "Chicago, IL",
-    region: "Midwest",
-    type: "University",
-    clusters: ["stem", "health", "arts", "social-sciences"],
-    costTier: "$$",
-    rating: 4.5,
-  },
-  {
-    id: "c7",
-    name: "Prairie Community College",
-    city: "Columbus, OH",
-    region: "Midwest",
-    type: "Community College",
-    clusters: ["trades", "business", "education", "health"],
-    costTier: "$",
-    rating: 3.9,
-  },
-  {
-    id: "c8",
-    name: "Desert Valley University",
-    city: "Phoenix, AZ",
-    region: "Southwest",
-    type: "University",
-    clusters: ["stem", "business", "education"],
-    costTier: "$$",
-    rating: 4.1,
-  },
-  {
-    id: "c9",
-    name: "Rio Grande Trade Academy",
-    city: "Austin, TX",
-    region: "Southwest",
-    type: "Trade School",
-    clusters: ["trades"],
-    costTier: "$",
-    rating: 4.2,
-  },
-  {
-    id: "c10",
-    name: "Pacific Coast University",
-    city: "San Francisco, CA",
-    region: "West",
-    type: "University",
-    clusters: ["stem", "arts", "business", "social-sciences"],
-    costTier: "$$$",
-    rating: 4.6,
-  },
-  {
-    id: "c11",
-    name: "Cascade Community College",
-    city: "Portland, OR",
-    region: "West",
-    type: "Community College",
-    clusters: ["arts", "trades", "health", "education"],
-    costTier: "$",
-    rating: 4.0,
-  },
-  {
-    id: "c12",
-    name: "Bayview Culinary & Hospitality Institute",
-    city: "Seattle, WA",
-    region: "West",
-    type: "Trade School",
-    clusters: ["trades", "business"],
-    costTier: "$$",
-    rating: 4.3,
-  },
-]
+/** GA public 4-year institutions from College Scorecard (refreshed via scripts/fetch-ga-colleges.mjs). */
+export const COLLEGES: College[] = gaCollegesData.schools

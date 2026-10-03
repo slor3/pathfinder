@@ -6,11 +6,27 @@ import {
   type PathSignal,
   type Major,
   type College,
-  type Region,
-  type Cluster,
 } from "./pathfinder-data"
 
 const TRAITS: Trait[] = ["analytical", "creative", "social", "handsOn", "leadership", "investigative"]
+
+/** CIP 2-digit families aligned with each major for college STEM overlap scoring. */
+const MAJOR_CIP_FAMILIES: Record<string, string[]> = {
+  cs: ["11"],
+  engineering: ["14"],
+  biology: ["26", "40", "41"],
+  nursing: ["51"],
+  psychology: ["42"],
+  business: ["52"],
+  marketing: ["52"],
+  design: ["50"],
+  "fine-arts": ["50"],
+  education: ["13"],
+  "skilled-trades": ["15"],
+  culinary: ["12"],
+}
+
+const DISPLAY_COLLEGE_LIMIT = 10
 
 export type Answers = Record<string, string> // scenarioId -> optionId
 export type PathwayAnswers = {
@@ -60,9 +76,62 @@ const PATH_COPY: Record<PathSignal | "mixed", { title: string; summary: string }
   },
 }
 
+function percentileRank(value: number, values: number[]): number {
+  if (values.length === 0) return 0
+  const sorted = [...values].sort((a, b) => a - b)
+  const index = sorted.findIndex((v) => v >= value)
+  const rank = index === -1 ? sorted.length - 1 : index
+  return rank / Math.max(1, sorted.length - 1)
+}
+
+function stemCipOverlap(college: College, topMajors: MajorMatch[]): number {
+  const families = new Set(
+    topMajors.flatMap((match) => MAJOR_CIP_FAMILIES[match.major.id] ?? []),
+  )
+  if (families.size === 0) return 0
+
+  const matchedFamilies = new Set<string>()
+  for (const code of college.stemCipCodes) {
+    const family = code.slice(0, 2)
+    if (families.has(family)) matchedFamilies.add(family)
+  }
+  return matchedFamilies.size
+}
+
+function rankColleges(topMajors: MajorMatch[]): CollegeMatch[] {
+  const completionRates = COLLEGES
+    .map((c) => c.completionRate)
+    .filter((v): v is number => v !== null)
+  const tuitions = COLLEGES
+    .map((c) => c.inStateTuition)
+    .filter((v): v is number => v !== null)
+
+  const collegeMatches: CollegeMatch[] = COLLEGES.map((college) => {
+    const cipOverlap = stemCipOverlap(college, topMajors)
+    const completionPercentile =
+      college.completionRate !== null
+        ? percentileRank(college.completionRate, completionRates)
+        : 0
+    const tuitionPercentile =
+      college.inStateTuition !== null
+        ? percentileRank(college.inStateTuition, tuitions)
+        : 0.5
+
+    // STEM CIP overlap (3×) + completion rate + inverse in-state price (per sprint recommendations).
+    const score =
+      3 * cipOverlap + completionPercentile + (1 - tuitionPercentile)
+
+    return { college, score }
+  })
+    .filter((match) => match.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, DISPLAY_COLLEGE_LIMIT)
+
+  return collegeMatches
+}
+
 export function generateReport(
   answers: Answers,
-  region: Region,
   pathwayAnswers?: PathwayAnswers,
 ): Report {
   // 1. Tally trait scores and path signals from answers.
@@ -134,23 +203,8 @@ export function generateReport(
         ? "applied"
         : scenarioPath
 
-  // 5. Recommend colleges in the chosen region that offer the top clusters.
-  const topClusters = new Set<Cluster>(majorMatches.map((m) => m.major.cluster))
-  const collegeMatches: CollegeMatch[] = COLLEGES.filter((c) => c.region === region)
-    .map((college) => {
-      const overlap = college.clusters.filter((c) => topClusters.has(c)).length
-      // Boost colleges whose type matches the recommended path.
-      const typeBonus =
-        ((leadingPath === "structured" && college.type === "University") ||
-        (leadingPath === "applied" &&
-          (college.type === "Community College" || college.type === "Trade School"))
-          ? 1.5
-          : 0)
-      const score = overlap + typeBonus + college.rating / 5
-      return { college, score }
-    })
-    .filter((m) => m.score > 0)
-    .sort((a, b) => b.score - a.score)
+  // 5. Rank Georgia public colleges by STEM CIP overlap, completion rate, and in-state tuition.
+  const collegeMatches = rankColleges(majorMatches)
 
   return {
     traitScores,

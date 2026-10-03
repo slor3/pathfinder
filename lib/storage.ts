@@ -4,6 +4,7 @@ import type { Region } from "./pathfinder-data"
 export type Profile = {
   name: string
   stage: "hs-senior" | "freshman" | "returning"
+  /** Always Georgia — PathFinder is scoped to in-state public colleges (PAT-17). */
   region: Region
 }
 
