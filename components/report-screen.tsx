@@ -10,6 +10,8 @@ import {
   Bookmark,
   BookOpen,
   Check,
+  ChevronDown,
+  ChevronUp,
   GraduationCap,
   MapPin,
   RotateCcw,
@@ -17,6 +19,12 @@ import {
   Star,
   Users,
 } from "lucide-react"
+import {
+  STEM_CIP_FAMILIES,
+  collegeHasCipFamily,
+  formatStemProgramTitle,
+  getMajorStemOverlap,
+} from "@/lib/cip-families"
 import { TRAIT_LABELS, CLUSTER_LABELS } from "@/lib/pathfinder-data"
 import type { Report } from "@/lib/recommend"
 import type { Profile } from "@/lib/storage"
@@ -42,6 +50,8 @@ function formatCompletionRate(rate: number | null): string {
 
 export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome }: Props) {
   const [compare, setCompare] = useState<string[]>([])
+  const [showStemDetails, setShowStemDetails] = useState(false)
+  const topMajors = report.majors.slice(0, 3)
 
   function toggleCompare(id: string) {
     setCompare((prev) =>
@@ -178,6 +188,10 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {report.colleges.map(({ college }) => {
               const inCompare = compare.includes(college.id)
+              const stemOverlap =
+                college.stemCipCodes.length > 0
+                  ? getMajorStemOverlap(college, topMajors)
+                  : null
               return (
                 <div
                   key={college.id}
@@ -204,9 +218,6 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
                     <Badge variant="secondary" className="font-normal">
                       {formatTuition(college.inStateTuition)} in-state
                     </Badge>
-                    <Badge variant="outline" className="font-normal text-muted-foreground">
-                      {college.stemCipCodes.length} STEM programs
-                    </Badge>
                     {college.studentSize !== null && (
                       <Badge variant="outline" className="gap-1 font-normal text-muted-foreground">
                         <Users className="size-3" aria-hidden />
@@ -214,6 +225,23 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
                       </Badge>
                     )}
                   </div>
+                  {stemOverlap && (
+                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                      <span className="text-xs text-muted-foreground">
+                        {stemOverlap.matchCount} of {stemOverlap.totalTopMajors} majors match
+                      </span>
+                      {stemOverlap.matchedMajors.map((major) => (
+                        <Badge key={major.id} variant="secondary" className="font-normal">
+                          {major.name}
+                        </Badge>
+                      ))}
+                      {stemOverlap.otherStemCount > 0 && (
+                        <Badge variant="outline" className="font-normal text-muted-foreground">
+                          +{stemOverlap.otherStemCount} other STEM
+                        </Badge>
+                      )}
+                    </div>
+                  )}
                   <button
                     onClick={() => toggleCompare(college.id)}
                     className={`mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border py-2 text-sm font-medium transition-colors ${
@@ -279,16 +307,66 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
                     </td>
                   ))}
                 </tr>
-                <tr>
-                  <td className="p-4 text-muted-foreground">STEM programs</td>
-                  {compareColleges.map((c) => (
-                    <td key={c.id} className="p-4">
-                      {c.stemPrograms.map((p) => p.title.replace(/\.$/, "")).join(", ")}
-                    </td>
-                  ))}
-                </tr>
+                {STEM_CIP_FAMILIES.map((family, index) => (
+                  <tr
+                    key={family.code}
+                    className={
+                      index < STEM_CIP_FAMILIES.length - 1 || showStemDetails
+                        ? "border-b border-border/60"
+                        : undefined
+                    }
+                  >
+                    <td className="p-4 text-muted-foreground">{family.label}</td>
+                    {compareColleges.map((college) => {
+                      const hasFamily = collegeHasCipFamily(college, family.code)
+                      return (
+                        <td key={college.id} className="p-4 text-center tabular-nums">
+                          <span
+                            className={hasFamily ? "text-primary" : "text-muted-foreground/60"}
+                            aria-label={hasFamily ? `Offers ${family.label}` : `No ${family.label} programs`}
+                          >
+                            {hasFamily ? "✓" : "—"}
+                          </span>
+                        </td>
+                      )
+                    })}
+                  </tr>
+                ))}
+                {showStemDetails && (
+                  <tr>
+                    <td className="p-4 align-top text-muted-foreground">All STEM programs</td>
+                    {compareColleges.map((college) => (
+                      <td key={college.id} className="p-4 align-top text-xs leading-relaxed">
+                        {college.stemPrograms.length > 0
+                          ? college.stemPrograms
+                              .map((program) => formatStemProgramTitle(program.title))
+                              .join(", ")
+                          : "—"}
+                      </td>
+                    ))}
+                  </tr>
+                )}
               </tbody>
             </table>
+            <div className="border-t border-border px-4 py-3">
+              <button
+                type="button"
+                onClick={() => setShowStemDetails((open) => !open)}
+                className="flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+              >
+                {showStemDetails ? (
+                  <>
+                    <ChevronUp className="size-4" aria-hidden />
+                    Hide program details
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="size-4" aria-hidden />
+                    Show all STEM programs
+                  </>
+                )}
+              </button>
+            </div>
           </Card>
         )}
       </div>

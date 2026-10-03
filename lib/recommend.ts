@@ -7,24 +7,9 @@ import {
   type Major,
   type College,
 } from "./pathfinder-data"
+import { countStemFamilyOverlap } from "./cip-families"
 
 const TRAITS: Trait[] = ["analytical", "creative", "social", "handsOn", "leadership", "investigative"]
-
-/** CIP 2-digit families aligned with each major for college STEM overlap scoring. */
-const MAJOR_CIP_FAMILIES: Record<string, string[]> = {
-  cs: ["11"],
-  engineering: ["14"],
-  biology: ["26", "40", "41"],
-  nursing: ["51"],
-  psychology: ["42"],
-  business: ["52"],
-  marketing: ["52"],
-  design: ["50"],
-  "fine-arts": ["50"],
-  education: ["13"],
-  "skilled-trades": ["15"],
-  culinary: ["12"],
-}
 
 const DISPLAY_COLLEGE_LIMIT = 10
 
@@ -85,17 +70,10 @@ function percentileRank(value: number, values: number[]): number {
 }
 
 function stemCipOverlap(college: College, topMajors: MajorMatch[]): number {
-  const families = new Set(
-    topMajors.flatMap((match) => MAJOR_CIP_FAMILIES[match.major.id] ?? []),
+  return countStemFamilyOverlap(
+    college,
+    topMajors.map((match) => match.major.id),
   )
-  if (families.size === 0) return 0
-
-  const matchedFamilies = new Set<string>()
-  for (const code of college.stemCipCodes) {
-    const family = code.slice(0, 2)
-    if (families.has(family)) matchedFamilies.add(family)
-  }
-  return matchedFamilies.size
 }
 
 function rankColleges(topMajors: MajorMatch[]): CollegeMatch[] {
