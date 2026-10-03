@@ -1,0 +1,1570 @@
+{
+  "fetchedAt": "2026-10-03",
+  "source": "https://collegescorecard.ed.gov/data/api/",
+  "filters": {
+    "state": "GA",
+    "ownership": "public (1)",
+    "fourYear": "school.degrees_awarded.highest >= 3 (bachelor's or higher)",
+    "stemCipFamilies": [
+      "11",
+      "14",
+      "26",
+      "27",
+      "40",
+      "41"
+    ]
+  },
+  "count": 26,
+  "schools": [
+    {
+      "id": "138558",
+      "name": "Abraham Baldwin Agricultural College",
+      "city": "Tifton",
+      "inStateTuition": 3268,
+      "completionRate": 0.3251,
+      "studentSize": 3208,
+      "stemCipCodes": [
+        "1102",
+        "2601"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1102",
+          "title": "Computer Programming."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        }
+      ]
+    },
+    {
+      "id": "138716",
+      "name": "Albany State University",
+      "city": "Albany",
+      "inStateTuition": 5656,
+      "completionRate": 0.2712,
+      "studentSize": 5956,
+      "stemCipCodes": [
+        "1101",
+        "2601",
+        "2701",
+        "4005"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        }
+      ]
+    },
+    {
+      "id": "138901",
+      "name": "Atlanta Metropolitan State College",
+      "city": "Atlanta",
+      "inStateTuition": 3248,
+      "completionRate": 0.159,
+      "studentSize": 1228,
+      "stemCipCodes": [
+        "1101",
+        "1110",
+        "2601",
+        "2703",
+        "4005"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2703",
+          "title": "Applied Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        }
+      ]
+    },
+    {
+      "id": "482149",
+      "name": "Augusta University",
+      "city": "Augusta",
+      "inStateTuition": 8414,
+      "completionRate": 0.4874,
+      "studentSize": 5613,
+      "stemCipCodes": [
+        "1101",
+        "1107",
+        "1110",
+        "1409",
+        "2601",
+        "2602",
+        "2604",
+        "2609",
+        "2610",
+        "2611",
+        "2612",
+        "2613",
+        "2615",
+        "2701",
+        "4005",
+        "4008"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1107",
+          "title": "Computer Science."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "1409",
+          "title": "Computer Engineering."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2602",
+          "title": "Biochemistry, Biophysics and Molecular Biology."
+        },
+        {
+          "code": "2604",
+          "title": "Cell/Cellular Biology and Anatomical Sciences."
+        },
+        {
+          "code": "2609",
+          "title": "Physiology, Pathology and Related Sciences."
+        },
+        {
+          "code": "2610",
+          "title": "Pharmacology and Toxicology."
+        },
+        {
+          "code": "2611",
+          "title": "Biomathematics, Bioinformatics, and Computational Biology."
+        },
+        {
+          "code": "2612",
+          "title": "Biotechnology."
+        },
+        {
+          "code": "2613",
+          "title": "Ecology, Evolution, Systematics, and Population Biology."
+        },
+        {
+          "code": "2615",
+          "title": "Neurobiology and Neurosciences."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4008",
+          "title": "Physics."
+        }
+      ]
+    },
+    {
+      "id": "139311",
+      "name": "Clayton  State University",
+      "city": "Morrow",
+      "inStateTuition": 5180,
+      "completionRate": 0.3762,
+      "studentSize": 4348,
+      "stemCipCodes": [
+        "1101",
+        "1104",
+        "1107",
+        "2601",
+        "2701",
+        "4005"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1104",
+          "title": "Information Science/Studies."
+        },
+        {
+          "code": "1107",
+          "title": "Computer Science."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        }
+      ]
+    },
+    {
+      "id": "139250",
+      "name": "College of Coastal Georgia",
+      "city": "Brunswick",
+      "inStateTuition": 3616,
+      "completionRate": 0.2558,
+      "studentSize": 2979,
+      "stemCipCodes": [
+        "2601",
+        "2701"
+      ],
+      "stemPrograms": [
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        }
+      ]
+    },
+    {
+      "id": "139366",
+      "name": "Columbus State University",
+      "city": "Columbus",
+      "inStateTuition": 5898,
+      "completionRate": 0.4175,
+      "studentSize": 5625,
+      "stemCipCodes": [
+        "1101",
+        "1108",
+        "1110",
+        "1442",
+        "1499",
+        "2601",
+        "2701",
+        "2799",
+        "4005",
+        "4006"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1108",
+          "title": "Computer Software and Media Applications."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "1442",
+          "title": "Mechatronics, Robotics, and Automation Engineering."
+        },
+        {
+          "code": "1499",
+          "title": "Engineering, Other."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "2799",
+          "title": "Mathematics and Statistics, Other."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4006",
+          "title": "Geological and Earth Sciences/Geosciences."
+        }
+      ]
+    },
+    {
+      "id": "139463",
+      "name": "Dalton State College",
+      "city": "Dalton",
+      "inStateTuition": 3336,
+      "completionRate": 0.2755,
+      "studentSize": 4553,
+      "stemCipCodes": [
+        "1109",
+        "1110",
+        "2601",
+        "2701",
+        "4005",
+        "4100"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1109",
+          "title": "Computer Systems Networking and Telecommunications."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4100",
+          "title": "Science Technologies/Technicians, General."
+        }
+      ]
+    },
+    {
+      "id": "139621",
+      "name": "East Georgia State College",
+      "city": "Swainsboro",
+      "inStateTuition": 2900,
+      "completionRate": 0.1523,
+      "studentSize": 1413,
+      "stemCipCodes": [
+        "2601",
+        "2701",
+        "4005"
+      ],
+      "stemPrograms": [
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        }
+      ]
+    },
+    {
+      "id": "139719",
+      "name": "Fort Valley State University",
+      "city": "Fort Valley",
+      "inStateTuition": 5526,
+      "completionRate": 0.4324,
+      "studentSize": 2684,
+      "stemCipCodes": [
+        "1101",
+        "1104",
+        "2601",
+        "2612",
+        "2701",
+        "4005"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1104",
+          "title": "Information Science/Studies."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2612",
+          "title": "Biotechnology."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        }
+      ]
+    },
+    {
+      "id": "139861",
+      "name": "Georgia College & State University",
+      "city": "Milledgeville",
+      "inStateTuition": 9186,
+      "completionRate": 0.626,
+      "studentSize": 5947,
+      "stemCipCodes": [
+        "1107",
+        "1110",
+        "2601",
+        "2701",
+        "4005",
+        "4008"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1107",
+          "title": "Computer Science."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4008",
+          "title": "Physics."
+        }
+      ]
+    },
+    {
+      "id": "447689",
+      "name": "Georgia Gwinnett College",
+      "city": "Lawrenceville",
+      "inStateTuition": 4532,
+      "completionRate": 0.2062,
+      "studentSize": 11344,
+      "stemCipCodes": [
+        "1101",
+        "1110",
+        "2601",
+        "2701",
+        "4005"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        }
+      ]
+    },
+    {
+      "id": "139700",
+      "name": "Georgia Highlands College",
+      "city": "Rome",
+      "inStateTuition": 3120,
+      "completionRate": 0.2073,
+      "studentSize": 4761,
+      "stemCipCodes": [],
+      "stemPrograms": []
+    },
+    {
+      "id": "139755",
+      "name": "Georgia Institute of Technology-Main Campus",
+      "city": "Atlanta",
+      "inStateTuition": 12058,
+      "completionRate": 0.9319,
+      "studentSize": 18785,
+      "stemCipCodes": [
+        "1101",
+        "1104",
+        "1107",
+        "1108",
+        "1110",
+        "1402",
+        "1405",
+        "1407",
+        "1408",
+        "1409",
+        "1410",
+        "1411",
+        "1414",
+        "1418",
+        "1419",
+        "1423",
+        "1427",
+        "1435",
+        "1436",
+        "1437",
+        "1440",
+        "1442",
+        "2601",
+        "2602",
+        "2609",
+        "2611",
+        "2615",
+        "2701",
+        "2703",
+        "2705",
+        "4005",
+        "4006",
+        "4008"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1104",
+          "title": "Information Science/Studies."
+        },
+        {
+          "code": "1107",
+          "title": "Computer Science."
+        },
+        {
+          "code": "1108",
+          "title": "Computer Software and Media Applications."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "1402",
+          "title": "Aerospace, Aeronautical, and Astronautical/Space Engineering."
+        },
+        {
+          "code": "1405",
+          "title": "Biomedical/Medical Engineering."
+        },
+        {
+          "code": "1407",
+          "title": "Chemical Engineering."
+        },
+        {
+          "code": "1408",
+          "title": "Civil Engineering."
+        },
+        {
+          "code": "1409",
+          "title": "Computer Engineering."
+        },
+        {
+          "code": "1410",
+          "title": "Electrical, Electronics, and Communications Engineering."
+        },
+        {
+          "code": "1411",
+          "title": "Engineering Mechanics."
+        },
+        {
+          "code": "1414",
+          "title": "Environmental/Environmental Health Engineering."
+        },
+        {
+          "code": "1418",
+          "title": "Materials Engineering."
+        },
+        {
+          "code": "1419",
+          "title": "Mechanical Engineering."
+        },
+        {
+          "code": "1423",
+          "title": "Nuclear Engineering."
+        },
+        {
+          "code": "1427",
+          "title": "Systems Engineering."
+        },
+        {
+          "code": "1435",
+          "title": "Industrial Engineering."
+        },
+        {
+          "code": "1436",
+          "title": "Manufacturing Engineering."
+        },
+        {
+          "code": "1437",
+          "title": "Operations Research."
+        },
+        {
+          "code": "1440",
+          "title": "Paper Science and Engineering."
+        },
+        {
+          "code": "1442",
+          "title": "Mechatronics, Robotics, and Automation Engineering."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2602",
+          "title": "Biochemistry, Biophysics and Molecular Biology."
+        },
+        {
+          "code": "2609",
+          "title": "Physiology, Pathology and Related Sciences."
+        },
+        {
+          "code": "2611",
+          "title": "Biomathematics, Bioinformatics, and Computational Biology."
+        },
+        {
+          "code": "2615",
+          "title": "Neurobiology and Neurosciences."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "2703",
+          "title": "Applied Mathematics."
+        },
+        {
+          "code": "2705",
+          "title": "Statistics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4006",
+          "title": "Geological and Earth Sciences/Geosciences."
+        },
+        {
+          "code": "4008",
+          "title": "Physics."
+        }
+      ]
+    },
+    {
+      "id": "139931",
+      "name": "Georgia Southern University",
+      "city": "Statesboro",
+      "inStateTuition": 6022,
+      "completionRate": 0.5345,
+      "studentSize": 21790,
+      "stemCipCodes": [
+        "1101",
+        "1104",
+        "1107",
+        "1110",
+        "1401",
+        "1408",
+        "1409",
+        "1410",
+        "1419",
+        "1433",
+        "1436",
+        "2601",
+        "2602",
+        "2701",
+        "4001",
+        "4005",
+        "4006",
+        "4008"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1104",
+          "title": "Information Science/Studies."
+        },
+        {
+          "code": "1107",
+          "title": "Computer Science."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "1401",
+          "title": "Engineering, General."
+        },
+        {
+          "code": "1408",
+          "title": "Civil Engineering."
+        },
+        {
+          "code": "1409",
+          "title": "Computer Engineering."
+        },
+        {
+          "code": "1410",
+          "title": "Electrical, Electronics, and Communications Engineering."
+        },
+        {
+          "code": "1419",
+          "title": "Mechanical Engineering."
+        },
+        {
+          "code": "1433",
+          "title": "Construction Engineering."
+        },
+        {
+          "code": "1436",
+          "title": "Manufacturing Engineering."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2602",
+          "title": "Biochemistry, Biophysics and Molecular Biology."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4001",
+          "title": "Physical Sciences, General."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4006",
+          "title": "Geological and Earth Sciences/Geosciences."
+        },
+        {
+          "code": "4008",
+          "title": "Physics."
+        }
+      ]
+    },
+    {
+      "id": "139764",
+      "name": "Georgia Southwestern State University",
+      "city": "Americus",
+      "inStateTuition": 5220,
+      "completionRate": 0.3608,
+      "studentSize": 2424,
+      "stemCipCodes": [
+        "1101",
+        "1107",
+        "2601",
+        "2701",
+        "4005",
+        "4006"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1107",
+          "title": "Computer Science."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4006",
+          "title": "Geological and Earth Sciences/Geosciences."
+        }
+      ]
+    },
+    {
+      "id": "139940",
+      "name": "Georgia State University",
+      "city": "Atlanta",
+      "inStateTuition": 8664,
+      "completionRate": 0.5337,
+      "studentSize": 26623,
+      "stemCipCodes": [
+        "1101",
+        "1102",
+        "1107",
+        "1108",
+        "1110",
+        "1437",
+        "2601",
+        "2615",
+        "2701",
+        "2703",
+        "2799",
+        "4002",
+        "4005",
+        "4006",
+        "4008"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1102",
+          "title": "Computer Programming."
+        },
+        {
+          "code": "1107",
+          "title": "Computer Science."
+        },
+        {
+          "code": "1108",
+          "title": "Computer Software and Media Applications."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "1437",
+          "title": "Operations Research."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2615",
+          "title": "Neurobiology and Neurosciences."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "2703",
+          "title": "Applied Mathematics."
+        },
+        {
+          "code": "2799",
+          "title": "Mathematics and Statistics, Other."
+        },
+        {
+          "code": "4002",
+          "title": "Astronomy and Astrophysics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4006",
+          "title": "Geological and Earth Sciences/Geosciences."
+        },
+        {
+          "code": "4008",
+          "title": "Physics."
+        }
+      ]
+    },
+    {
+      "id": "139968",
+      "name": "Gordon State College",
+      "city": "Barnesville",
+      "inStateTuition": 3628,
+      "completionRate": 0.1863,
+      "studentSize": 2544,
+      "stemCipCodes": [
+        "1101",
+        "1110",
+        "1401",
+        "2601",
+        "2701",
+        "4005"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "1401",
+          "title": "Engineering, General."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        }
+      ]
+    },
+    {
+      "id": "486840",
+      "name": "Kennesaw State University",
+      "city": "Kennesaw",
+      "inStateTuition": 5808,
+      "completionRate": 0.5004,
+      "studentSize": 41254,
+      "stemCipCodes": [
+        "1101",
+        "1102",
+        "1104",
+        "1107",
+        "1108",
+        "1110",
+        "1408",
+        "1409",
+        "1410",
+        "1414",
+        "1419",
+        "1427",
+        "1433",
+        "1442",
+        "1447",
+        "1499",
+        "2601",
+        "2602",
+        "2701",
+        "2703",
+        "2705",
+        "4005",
+        "4008"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1102",
+          "title": "Computer Programming."
+        },
+        {
+          "code": "1104",
+          "title": "Information Science/Studies."
+        },
+        {
+          "code": "1107",
+          "title": "Computer Science."
+        },
+        {
+          "code": "1108",
+          "title": "Computer Software and Media Applications."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "1408",
+          "title": "Civil Engineering."
+        },
+        {
+          "code": "1409",
+          "title": "Computer Engineering."
+        },
+        {
+          "code": "1410",
+          "title": "Electrical, Electronics, and Communications Engineering."
+        },
+        {
+          "code": "1414",
+          "title": "Environmental/Environmental Health Engineering."
+        },
+        {
+          "code": "1419",
+          "title": "Mechanical Engineering."
+        },
+        {
+          "code": "1427",
+          "title": "Systems Engineering."
+        },
+        {
+          "code": "1433",
+          "title": "Construction Engineering."
+        },
+        {
+          "code": "1442",
+          "title": "Mechatronics, Robotics, and Automation Engineering."
+        },
+        {
+          "code": "1447",
+          "title": "Electrical and Computer Engineering."
+        },
+        {
+          "code": "1499",
+          "title": "Engineering, Other."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2602",
+          "title": "Biochemistry, Biophysics and Molecular Biology."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "2703",
+          "title": "Applied Mathematics."
+        },
+        {
+          "code": "2705",
+          "title": "Statistics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4008",
+          "title": "Physics."
+        }
+      ]
+    },
+    {
+      "id": "482158",
+      "name": "Middle Georgia State University",
+      "city": "Macon",
+      "inStateTuition": 5038,
+      "completionRate": 0.2545,
+      "studentSize": 6574,
+      "stemCipCodes": [
+        "1101",
+        "1108",
+        "1110",
+        "2601",
+        "2701"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1108",
+          "title": "Computer Software and Media Applications."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        }
+      ]
+    },
+    {
+      "id": "140960",
+      "name": "Savannah State University",
+      "city": "Savannah",
+      "inStateTuition": 5750,
+      "completionRate": 0.2652,
+      "studentSize": 2833,
+      "stemCipCodes": [
+        "1104",
+        "2601",
+        "2613",
+        "2701",
+        "4005",
+        "4006"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1104",
+          "title": "Information Science/Studies."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2613",
+          "title": "Ecology, Evolution, Systematics, and Population Biology."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4006",
+          "title": "Geological and Earth Sciences/Geosciences."
+        }
+      ]
+    },
+    {
+      "id": "482699",
+      "name": "South Georgia State College",
+      "city": "Douglas",
+      "inStateTuition": 3314,
+      "completionRate": 0.1824,
+      "studentSize": 1466,
+      "stemCipCodes": [
+        "2601"
+      ],
+      "stemPrograms": [
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        }
+      ]
+    },
+    {
+      "id": "139959",
+      "name": "University of Georgia",
+      "city": "Athens",
+      "inStateTuition": 11450,
+      "completionRate": 0.8886,
+      "studentSize": 32137,
+      "stemCipCodes": [
+        "1101",
+        "1107",
+        "1108",
+        "1110",
+        "1401",
+        "1403",
+        "1405",
+        "1408",
+        "1409",
+        "1410",
+        "1414",
+        "1419",
+        "1424",
+        "1443",
+        "1445",
+        "2601",
+        "2602",
+        "2603",
+        "2604",
+        "2605",
+        "2607",
+        "2608",
+        "2609",
+        "2610",
+        "2611",
+        "2612",
+        "2613",
+        "2614",
+        "2615",
+        "2701",
+        "2703",
+        "2705",
+        "4002",
+        "4004",
+        "4005",
+        "4006",
+        "4008",
+        "4010"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1107",
+          "title": "Computer Science."
+        },
+        {
+          "code": "1108",
+          "title": "Computer Software and Media Applications."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "1401",
+          "title": "Engineering, General."
+        },
+        {
+          "code": "1403",
+          "title": "Agricultural Engineering."
+        },
+        {
+          "code": "1405",
+          "title": "Biomedical/Medical Engineering."
+        },
+        {
+          "code": "1408",
+          "title": "Civil Engineering."
+        },
+        {
+          "code": "1409",
+          "title": "Computer Engineering."
+        },
+        {
+          "code": "1410",
+          "title": "Electrical, Electronics, and Communications Engineering."
+        },
+        {
+          "code": "1414",
+          "title": "Environmental/Environmental Health Engineering."
+        },
+        {
+          "code": "1419",
+          "title": "Mechanical Engineering."
+        },
+        {
+          "code": "1424",
+          "title": "Ocean Engineering."
+        },
+        {
+          "code": "1443",
+          "title": "Biochemical Engineering."
+        },
+        {
+          "code": "1445",
+          "title": "Biological/Biosystems Engineering."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2602",
+          "title": "Biochemistry, Biophysics and Molecular Biology."
+        },
+        {
+          "code": "2603",
+          "title": "Botany/Plant Biology."
+        },
+        {
+          "code": "2604",
+          "title": "Cell/Cellular Biology and Anatomical Sciences."
+        },
+        {
+          "code": "2605",
+          "title": "Microbiological Sciences and Immunology."
+        },
+        {
+          "code": "2607",
+          "title": "Zoology/Animal Biology."
+        },
+        {
+          "code": "2608",
+          "title": "Genetics."
+        },
+        {
+          "code": "2609",
+          "title": "Physiology, Pathology and Related Sciences."
+        },
+        {
+          "code": "2610",
+          "title": "Pharmacology and Toxicology."
+        },
+        {
+          "code": "2611",
+          "title": "Biomathematics, Bioinformatics, and Computational Biology."
+        },
+        {
+          "code": "2612",
+          "title": "Biotechnology."
+        },
+        {
+          "code": "2613",
+          "title": "Ecology, Evolution, Systematics, and Population Biology."
+        },
+        {
+          "code": "2614",
+          "title": "Molecular Medicine."
+        },
+        {
+          "code": "2615",
+          "title": "Neurobiology and Neurosciences."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "2703",
+          "title": "Applied Mathematics."
+        },
+        {
+          "code": "2705",
+          "title": "Statistics."
+        },
+        {
+          "code": "4002",
+          "title": "Astronomy and Astrophysics."
+        },
+        {
+          "code": "4004",
+          "title": "Atmospheric Sciences and Meteorology."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4006",
+          "title": "Geological and Earth Sciences/Geosciences."
+        },
+        {
+          "code": "4008",
+          "title": "Physics."
+        },
+        {
+          "code": "4010",
+          "title": "Materials Sciences."
+        }
+      ]
+    },
+    {
+      "id": "482680",
+      "name": "University of North Georgia",
+      "city": "Dahlonega",
+      "inStateTuition": 5285,
+      "completionRate": 0.3709,
+      "studentSize": 16146,
+      "stemCipCodes": [
+        "1101",
+        "1104",
+        "1110",
+        "2601",
+        "2701",
+        "4005",
+        "4006",
+        "4008"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1104",
+          "title": "Information Science/Studies."
+        },
+        {
+          "code": "1110",
+          "title": "Computer/Information Technology Administration and Management."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4006",
+          "title": "Geological and Earth Sciences/Geosciences."
+        },
+        {
+          "code": "4008",
+          "title": "Physics."
+        }
+      ]
+    },
+    {
+      "id": "141334",
+      "name": "University of West Georgia",
+      "city": "Carrollton",
+      "inStateTuition": 6088,
+      "completionRate": 0.4311,
+      "studentSize": 7520,
+      "stemCipCodes": [
+        "1101",
+        "1107",
+        "2601",
+        "2701",
+        "4005",
+        "4006",
+        "4008"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1107",
+          "title": "Computer Science."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4006",
+          "title": "Geological and Earth Sciences/Geosciences."
+        },
+        {
+          "code": "4008",
+          "title": "Physics."
+        }
+      ]
+    },
+    {
+      "id": "141264",
+      "name": "Valdosta State University",
+      "city": "Valdosta",
+      "inStateTuition": 6124,
+      "completionRate": 0.4205,
+      "studentSize": 6622,
+      "stemCipCodes": [
+        "1101",
+        "1104",
+        "1401",
+        "2601",
+        "2609",
+        "2701",
+        "2703",
+        "4002",
+        "4005",
+        "4006",
+        "4008"
+      ],
+      "stemPrograms": [
+        {
+          "code": "1101",
+          "title": "Computer and Information Sciences, General."
+        },
+        {
+          "code": "1104",
+          "title": "Information Science/Studies."
+        },
+        {
+          "code": "1401",
+          "title": "Engineering, General."
+        },
+        {
+          "code": "2601",
+          "title": "Biology, General."
+        },
+        {
+          "code": "2609",
+          "title": "Physiology, Pathology and Related Sciences."
+        },
+        {
+          "code": "2701",
+          "title": "Mathematics."
+        },
+        {
+          "code": "2703",
+          "title": "Applied Mathematics."
+        },
+        {
+          "code": "4002",
+          "title": "Astronomy and Astrophysics."
+        },
+        {
+          "code": "4005",
+          "title": "Chemistry."
+        },
+        {
+          "code": "4006",
+          "title": "Geological and Earth Sciences/Geosciences."
+        },
+        {
+          "code": "4008",
+          "title": "Physics."
+        }
+      ]
+    }
+  ]
+}

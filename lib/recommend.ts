@@ -6,11 +6,12 @@ import {
   type PathSignal,
   type Major,
   type College,
-  type Region,
-  type Cluster,
 } from "./pathfinder-data"
+import { countStemFamilyOverlap } from "./cip-families"
 
 const TRAITS: Trait[] = ["analytical", "creative", "social", "handsOn", "leadership", "investigative"]
+
+const DISPLAY_COLLEGE_LIMIT = 10
 
 export type Answers = Record<string, string> // scenarioId -> optionId
 export type PathwayAnswers = {
@@ -60,9 +61,55 @@ const PATH_COPY: Record<PathSignal | "mixed", { title: string; summary: string }
   },
 }
 
+function percentileRank(value: number, values: number[]): number {
+  if (values.length === 0) return 0
+  const sorted = [...values].sort((a, b) => a - b)
+  const index = sorted.findIndex((v) => v >= value)
+  const rank = index === -1 ? sorted.length - 1 : index
+  return rank / Math.max(1, sorted.length - 1)
+}
+
+function stemCipOverlap(college: College, topMajors: MajorMatch[]): number {
+  return countStemFamilyOverlap(
+    college,
+    topMajors.map((match) => match.major.id),
+  )
+}
+
+function rankColleges(topMajors: MajorMatch[]): CollegeMatch[] {
+  const completionRates = COLLEGES
+    .map((c) => c.completionRate)
+    .filter((v): v is number => v !== null)
+  const tuitions = COLLEGES
+    .map((c) => c.inStateTuition)
+    .filter((v): v is number => v !== null)
+
+  const collegeMatches: CollegeMatch[] = COLLEGES.map((college) => {
+    const cipOverlap = stemCipOverlap(college, topMajors)
+    const completionPercentile =
+      college.completionRate !== null
+        ? percentileRank(college.completionRate, completionRates)
+        : 0
+    const tuitionPercentile =
+      college.inStateTuition !== null
+        ? percentileRank(college.inStateTuition, tuitions)
+        : 0.5
+
+    // STEM CIP overlap (3×) + completion rate + inverse in-state price (per sprint recommendations).
+    const score =
+      3 * cipOverlap + completionPercentile + (1 - tuitionPercentile)
+
+    return { college, score }
+  })
+    .filter((match) => match.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, DISPLAY_COLLEGE_LIMIT)
+
+  return collegeMatches
+}
+
 export function generateReport(
   answers: Answers,
-  region: Region,
   pathwayAnswers?: PathwayAnswers,
 ): Report {
   // 1. Tally trait scores and path signals from answers.
@@ -134,23 +181,8 @@ export function generateReport(
         ? "applied"
         : scenarioPath
 
-  // 5. Recommend colleges in the chosen region that offer the top clusters.
-  const topClusters = new Set<Cluster>(majorMatches.map((m) => m.major.cluster))
-  const collegeMatches: CollegeMatch[] = COLLEGES.filter((c) => c.region === region)
-    .map((college) => {
-      const overlap = college.clusters.filter((c) => topClusters.has(c)).length
-      // Boost colleges whose type matches the recommended path.
-      const typeBonus =
-        ((leadingPath === "structured" && college.type === "University") ||
-        (leadingPath === "applied" &&
-          (college.type === "Community College" || college.type === "Trade School"))
-          ? 1.5
-          : 0)
-      const score = overlap + typeBonus + college.rating / 5
-      return { college, score }
-    })
-    .filter((m) => m.score > 0)
-    .sort((a, b) => b.score - a.score)
+  // 5. Rank Georgia public colleges by STEM CIP overlap, completion rate, and in-state tuition.
+  const collegeMatches = rankColleges(majorMatches)
 
   return {
     traitScores,

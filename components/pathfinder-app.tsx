@@ -52,7 +52,7 @@ export function PathfinderApp() {
     if (!profile) return
     setAnswers(finalAnswers)
     setPathwayAnswers(finalPathwayAnswers)
-    const generated = generateReport(finalAnswers, profile.region, finalPathwayAnswers)
+    const generated = generateReport(finalAnswers, finalPathwayAnswers)
     setReport(generated)
     setSavedCurrent(false)
     setStage("report")
