@@ -11,9 +11,21 @@ type Props = {
 const SOURCES = [
   {
     title: "Holland Codes (RIASEC)",
-    body: "Holland's six interest themes—Realistic, Investigative, Artistic, Social, Enterprising, and Conventional—help define PathFinder's six traits. This is the research foundation for how we describe different ways of approaching work and learning.",
-    href: "https://www.onetcenter.org/IP.html",
-    label: "Read about the Interest Profiler",
+    body: "Holland's six interest themes—Realistic, Investigative, Artistic, Social, Enterprising, and Conventional—provide a framework for describing interests in different kinds of work and learning.",
+    href: "https://www.careerkey.org/fit/personality/holland-personality-types",
+    label: "Read about Holland personality types",
+  },
+  {
+    title: "O*NET Interest Profiler Short Form",
+    body: "This PDF describes the Interest Profiler items associated with the RIASEC framework. PathFinder's STEM scenarios are original adaptations informed by these themes; they are not a validated version of the profiler.",
+    href: "https://www.onetcenter.org/dl_tools/ipsf/Interest_Profiler.pdf",
+    label: "Read the Interest Profiler PDF",
+  },
+  {
+    title: "College Scorecard",
+    body: "The U.S. Department of Education's College Scorecard provides the institution data used for Georgia public four-year college recommendations, including tuition, completion, enrollment, and selected STEM program information. The current dataset is checked into the project and can be refreshed with its fetch script.",
+    href: "https://collegescorecard.ed.gov/",
+    label: "Explore College Scorecard",
   },
   {
     title: "O*NET occupations",
@@ -52,7 +64,7 @@ export function ResearchScreen({ onBack }: Props) {
           {
             icon: Lightbulb,
             title: "1. Choose a first move",
-            body: "You answer eight realistic scenarios. There is no right answer—choose the option that feels most like how you would begin.",
+            body: "You answer eight STEM-themed scenarios randomly selected from a pool of 16. There is no right answer—choose the option that feels most like how you would begin.",
           },
           {
             icon: Scale,
@@ -81,30 +93,30 @@ export function ResearchScreen({ onBack }: Props) {
           <Card className="p-5">
             <h3 className="font-semibold">Six traits and major mapping</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              We use research-informed definitions for six traits: analytical, investigative,
-              creative, social, hands-on, and leadership. We started by mapping those traits to
-              all 19 GGC bachelor&apos;s programs, using official program information and
-              representative O*NET occupational activities as supporting evidence.
+              PathFinder records six traits: analytical, investigative, creative, social,
+              hands-on, and leadership. The scenario options also carry a RIASEC interest theme
+              guided by O*NET. These are transparent, provisional mappings for exploration—not
+              research-validated measurements or a claim that O*NET endorses this quiz.
             </p>
           </Card>
           <Card className="p-5">
-            <h3 className="font-semibold">Sixteen original scenarios</h3>
+            <h3 className="font-semibold">Sixteen original STEM scenarios</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              PathFinder has 16 original scenarios, each with four first-move options. Every quiz
-              randomly selects eight scenarios, so each run is different while staying eight
-              questions long. After those scenarios, three short pathway questions ask about your
-              goals, preferred learning setup, and comfort with a longer program to help clarify
-              possible next moves. The option weights are provisional design choices—not
-              research-proven measurements—and will be evaluated through review and testing.
+              The pool covers environmental science, robotics, health data, renewable energy,
+              computing, agriculture, materials science, astronomy, mapping, food science,
+              assistive technology, and manufacturing. Each scenario has four first-move options;
+              every quiz randomly selects eight. The option weights are provisional design
+              choices informed by RIASEC themes, not research-proven measurements, and should be
+              reviewed and tested.
             </p>
           </Card>
           <Card className="p-5 md:col-span-2">
             <h3 className="font-semibold">Georgia-wide college exploration</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              The next college-data step is to use real institutions across Georgia and show a
-              short list of leading matches, such as five or ten programs or colleges. College
-              recommendations will be based on the user&apos;s state and program fit, with sources
-              and limitations shown clearly—not on unsupported national rankings.
+              College recommendations use a checked-in College Scorecard dataset of Georgia
+              public four-year institutions. The report ranks a short list for each student, and
+              the project&apos;s fetch script can refresh the source data. Scores are a
+              PathFinder-designed match, not an official College Scorecard ranking.
             </p>
           </Card>
         </div>
