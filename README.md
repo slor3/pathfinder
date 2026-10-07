@@ -2,9 +2,14 @@
 
 Decision-support app for students who are unsure about college or a major.
 
-PathFinder uses short real-life scenarios instead of a traditional survey. After eight questions, it shows a college-fit prompt, a strengths snapshot, suggested majors, and nearby colleges.
+PathFinder uses short STEM scenarios instead of a traditional survey. After eight
+questions, it shows a college-fit suggestion, strength bars, STEM major ideas,
+and ranked Georgia public colleges.
 
 **Live demo:** [https://pathfinder-iota-mauve.vercel.app/](https://pathfinder-iota-mauve.vercel.app/)
+
+**Documentation:** start at [`docs/README.md`](docs/README.md) for how scoring
+works and how the STEM major profiles were built.
 
 ## Team
 
@@ -52,8 +57,9 @@ No `.env` is required for the current prototype. Copy `.env.example` to `.env.lo
 | --- | --- |
 | `app/` | Next.js app shell |
 | `components/` | Landing, profile, quiz, and report screens |
-| `docs/construct-map.md` | Scoring rules, traits, paths, and `generateReport()` contract |
-| `docs/scorecard-stem-mapping.md` | STEM major-area profiles and catalog/O*NET evidence |
+| `docs/README.md` | Documentation index and glossary (start here) |
+| `docs/construct-map.md` | How quiz answers become the report |
+| `docs/scorecard-stem-mapping.md` | Eight STEM major profiles and research sources |
 | `lib/stem-scenarios.ts` | 16 STEM quiz scenarios and per-option weights |
 | `lib/pathfinder-data.ts` | Major profiles, trait labels, types |
 | `lib/ga-colleges.json` | Cached Georgia public college dataset |

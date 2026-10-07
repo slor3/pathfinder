@@ -1,189 +1,189 @@
-# Construct map
+# How scoring works
 
-Internal contract for how quiz answers become the report. `generateReport()` in
-`lib/recommend.ts` must follow this document. Scenario text and per-option
-weights live in `lib/stem-scenarios.ts`; major and college data live in
-`lib/pathfinder-data.ts` and `lib/ga-colleges.json`.
+This document explains how PathFinder turns quiz answers into the report.
+Developers: `generateReport()` in `lib/recommend.ts` must match these rules.
 
-Student-facing explanation is on the research screen (`components/research-screen.tsx`), not this file.
+For a shorter overview, see [docs/README.md](./README.md). Student-facing copy
+lives on the research screen (`components/research-screen.tsx`).
 
-## Quiz format
+---
 
-PathFinder uses a **situation judgment test (SJT)** shape: a short **situation**, a **prompt** (“What’s your first move?”), and **four first-moves** with no single correct answer.
-
-We adapt the format described in Oswald et al. (2004), [*Structured interviews in employment settings*](https://doi.org/10.1037/0021-9010.89.2.187): situational stem plus behavioral response options. PathFinder writes **original** school-life situations. We do **not** copy Oswald appendix items or O\*NET Interest Profiler Like/Dislike statements.
-
-The quiz serves **eight** shuffled scenarios from a **16-item STEM pool**
-(`QUIZ_SIZE = 8` in `lib/recommend.ts`), then three **education preference**
-questions (see below). Helper text tells users there is no right answer.
-
-### Scenario pool (`lib/stem-scenarios.ts`)
-
-Each option adds trait weights (primary = 2, supporting = 1) and one path vote
-(`structured`, `applied`, or `entrepreneurial`). Each option also records a
-RIASEC interest theme and an `onetTheme` rationale. The weights and path votes
-are PathFinder design choices informed by those themes; they are not O\*NET
-scores.
-
-The pool uses original STEM-themed situations (environmental science, robotics,
-health data, computing, agriculture, and related fields). Scenario and option
-identifiers, labels, trait weights, paths, RIASEC themes, and rationales are
-maintained only in the TypeScript data file—do not duplicate them here.
-
-## Six strength traits
-
-Each scenario option adds trait weights (primary = 2, secondary = 1). Traits are derived from O\*NET Interest Profiler / Holland RIASEC themes, not from a personality type test.
-
-| Code (`pathfinder-data.ts`) | Report label | RIASEC source |
-| --- | --- | --- |
-| `handsOn` | Hands-on | Realistic (R) |
-| `investigative` | Investigative | Investigative (I) |
-| `creative` | Creative | Artistic (A) |
-| `social` | People-focused | Social (S) |
-| `leadership` | Leadership | Enterprising (E) |
-| `analytical` | Analytical | Conventional (C), with some Investigative (I) overlap |
-
-**Analytical** and **Investigative** remain separate PathFinder traits, but real
-activities can involve both. Data analysis, for example, can be Investigative
-when exploring evidence and Analytical when evaluating or organizing it. A
-“research first” move and a “checklist/process first” move should still have
-different primary signals.
-
-### Trait scoring (`generateReport` steps 1–2)
-
-1. Sum trait weights from every answered scenario option.
-2. Normalize to 0–100: each trait = `round(raw / maxRaw * 100)` where `maxRaw` is the highest raw trait total (minimum 1).
-3. **Top strengths** = the three traits with the highest raw totals (used for display ordering).
-
-Pathway questions do **not** change trait scores (see [Education preference questions](#education-preference-questions-pathway-override)).
-
-## Three college-fit paths plus mixed
-
-College-fit paths are **not majors** and **not personality types**. They answer one question: given how someone tends to act in situations, **what kind of education route looks like the best fit?**
-
-Each scenario option carries one path vote. After eight scenarios, the app counts votes for `structured`, `applied`, and `entrepreneurial`. Path is **independent of RIASEC** — the same interest type can map to any path depending on the first-move (see `lib/stem-scenarios.ts`). Labels are **suggestions**, not verdicts.
-
-| Path (`PathSignal`) | Report headline (from `PATH_COPY`) | What it means | Real-world examples |
-| --- | --- | --- | --- |
-| `structured` | A 4-year college is a strong fit | The person leans toward **formal, longer credential paths** — classes, degrees, and clear progression. | Four-year university; bachelor’s programs; professional fields that typically require a degree (nursing, engineering, education). |
-| `applied` | A hands-on or 2-year path may suit you best | The person leans toward **learning by doing** and building skills on a shorter or work-first timeline. | Community college; associate degree; trade school; apprenticeship; certificate programs; training then work, with transfer later as an option. |
-| `entrepreneurial` | Keep college flexible and goal-driven | The person leans toward **choosing education on purpose**, not “college by default.” | Start a business or side project; build a portfolio; pick college only for a specific skill, network, or goal; gap year with a plan. |
-| `mixed` | Your college-fit signals are mixed | Scenario answers **do not agree** — no path wins clearly enough to call. | Explore programs that blend structure, hands-on work, and flexibility before committing; compare 2-year vs 4-year options. |
-
-A user with Realistic (hands-on) interests can still land on `structured` when their first-moves point at degree-heavy fields (for example engineering or nursing prep).
-
-### O\*NET Job Zone justification
-
-O\*NET [Job Zones](https://www.onetonline.org/help/online/zones) describe preparation level for occupations:
-
-| Zone | Preparation | PathFinder path |
-| --- | --- | --- |
-| 4–5 | Considerable / extensive (bachelor’s or graduate typical) | **`structured`** — 4-year and professional-degree routes |
-| 2–3 | Some / medium (HS diploma, apprenticeship, associate, vocational) | **`applied`** — community college, trade, and work-first training |
-| 1–5 (varies) | Depends on the person’s goal, not one credential | **`entrepreneurial`** — education kept flexible or chosen for a specific outcome |
-
-### O\*NET Work Importance justification
-
-O\*NET [Work Importance](https://www.onetonline.org/find/descriptor/browse/1.B.2/) values help explain why each path exists:
-
-| Path | Work Importance values that motivate it |
-| --- | --- |
-| `structured` | **Achievement**, **Support** — progress through structured learning and credentials |
-| `applied` | **Working Conditions**, **Achievement** — practical settings and visible skill mastery |
-| `entrepreneurial` | **Independence**, **Recognition**, **Achievement** — self-directed goals and outcomes over a default credential |
-
-These justify the construct; the engine counts path votes from scenario options, not from Work Importance scores directly.
-
-### Mixed college-fit
-
-After eight scenario answers, count votes for `structured`, `applied`, and `entrepreneurial`.
-
-Let the leading path be `L` and the runner-up count be `R`.
-
-- If `L − R ≥ 2`, the scenario-based path is `L`.
-- Otherwise the scenario-based path is **`mixed`**.
-
-Example: 4 structured / 3 applied / 1 entrepreneurial → lead is only 1 → **mixed**.  
-Example: 5 structured / 2 applied / 1 entrepreneurial → lead is 3 → **structured**.
-
-Mixed copy: *“Your answers point in more than one direction…”* (`PATH_COPY.mixed` in `lib/recommend.ts`).
-
-### Education preference questions (pathway override)
-
-After the eight scenarios, the quiz asks **three direct questions about education plans**. These are separate from the college-fit paths above. They do **not** change trait scores — only the college-fit headline.
-
-| Question key | What it asks | Example answers |
-| --- | --- | --- |
-| `educationGoal` | What the next step should help them do | Earn a required degree; build practical skills; explore; unsure |
-| `learningPreference` | Which learning setup feels sustainable | Several years of structured classes; shorter applied courses; a mix; unsure |
-| `commitment` | Comfort with a multi-year program | Comfortable with several years; prefer shorter first; work/train before committing; unsure |
-
-Override rules — applied **after** scenario path votes:
-
-- Force **`structured`** if any answer is: `degree-required`, `structured` learning preference, or `several-years` commitment.
-- Else force **`applied`** if any answer is: `practical-skills`, `shorter-first`, or `work-first`.
-- Else use the scenario-based path (including **`mixed`**).
-
-Education preference answers **cannot** force `entrepreneurial`. That path comes only from scenario votes when entrepreneurial wins by the 2+ rule.
-
-**Real-world effect:** a student whose scenarios say `mixed` but who picks “build practical skills” and “shorter program first” will still see the **`applied`** headline. A student who picks “earn a degree” and “several years of structured classes” will see **`structured`**, even if scenarios were split.
-
-## Answer → report pipeline
+## At a glance
 
 ```
-8 scenario answers (+ option weights from stem-scenarios.ts)
-  → trait totals → normalized traitScores + topTraits
-  → path vote counts → scenario path (or mixed)
-  → education preference answers → final path key + PATH_COPY text
+8 scenario answers
+  → six trait scores (strength bars)
+  → college-fit path (or “mixed”)
+  → 3 education-preference answers may override the path headline
 
-trait totals + MAJORS profiles
-  → dot-product major scores → ranked major-area profiles
-
-top major matches
-  → CIP-family overlap + completion-rate percentile + inverse tuition percentile
-  → ranked Georgia public colleges
+trait scores + major-area profiles → top STEM major suggestions
+top majors + college data → ranked Georgia public colleges
 ```
 
-| Report section | Source in code | Driven by |
-| --- | --- | --- |
-| Strength bars | `traitScores`, `topTraits` | Scenario option trait weights |
-| College-fit headline | `path` | Path votes + education preference override + mixed rule |
-| Suggested majors | `majors` | Trait vector × major profiles |
-| Recommended colleges | `colleges` | STEM CIP-family overlap, completion-rate percentile, and in-state tuition percentile |
-
-## College and major data
-
-**Colleges.** Georgia public four-year institutions come from the U.S.
-Department of Education [College Scorecard](https://collegescorecard.ed.gov/),
-fetched by [`scripts/fetch-ga-colleges.mjs`](../scripts/fetch-ga-colleges.mjs)
-and stored in [`lib/ga-colleges.json`](../lib/ga-colleges.json). The app ranks
-schools with its own STEM-program overlap, completion-rate, and in-state tuition
-scoring; those rankings are not official College Scorecard outputs.
-
-**Major-area profiles.** Eight broad STEM areas used for major recommendations
-are documented in [scorecard-stem-mapping.md](./scorecard-stem-mapping.md).
-Provisional trait weights there are informed by official Georgia university
-program descriptions. College Scorecard CIP titles indicate program
-availability; they do not establish that every school offers each area as a
-separate undergraduate degree.
-
-## Code and research references
-
-| Location | Owns |
+| Report section | What drives it |
 | --- | --- |
-| `lib/stem-scenarios.ts` | 16 STEM scenarios; per-option traits, paths, RIASEC, `onetTheme` |
+| Strength bars | Trait weights on the 8 scenario answers you chose |
+| College-fit headline | Path votes + education-preference override |
+| Suggested majors | How your traits match eight STEM area profiles |
+| Recommended colleges | STEM program overlap, completion rate, in-state tuition |
+
+---
+
+## The quiz
+
+Each question is a **short STEM situation** with **four possible first moves**.
+There is no correct answer—the student picks what feels most like them.
+
+- **16 scenarios** exist in `lib/stem-scenarios.ts`.
+- The app shows **8** at random (`QUIZ_SIZE = 8`).
+- After scenarios, the student answers **3 education preference** questions.
+
+We use a situational-judgment format inspired by published interview research
+(Oswald et al., 2004). All scenario text is **original**—we do not copy O\*NET
+Interest Profiler items or other published tests.
+
+### What each answer contributes
+
+Every option a student can pick includes:
+
+| Field | What it does |
+| --- | --- |
+| **Trait weights** | Adds points to up to two traits (main choice = 2, secondary = 1) |
+| **Path vote** | Votes for `structured`, `applied`, or `entrepreneurial` |
+| **RIASEC theme** | Research label (R, I, A, S, E, or C) tied to O\*NET interest areas |
+| **onetTheme** | Short note on why that option maps to a theme (for documentation) |
+
+Trait weights and path votes are **PathFinder design choices** informed by
+research—they are not official O\*NET scores.
+
+---
+
+## Six traits
+
+Traits appear as **strength bars** on the report. They come from the Holland
+RIASEC interest framework (via O\*NET), not from a personality type test.
+
+| Report label | Code in data | Based on RIASEC |
+| --- | --- | --- |
+| Hands-on | `handsOn` | Realistic (R) |
+| Investigative | `investigative` | Investigative (I) |
+| Creative | `creative` | Artistic (A) |
+| People-focused | `social` | Social (S) |
+| Leadership | `leadership` | Enterprising (E) |
+| Analytical | `analytical` | Conventional (C) |
+
+**Investigative** and **Analytical** are separate on purpose. “Research the
+problem first” and “make a checklist first” should score differently even though
+both can involve thinking.
+
+### How trait scores are calculated
+
+1. Add up trait points from all 8 answered scenarios.
+2. Scale each trait to 0–100 relative to the student’s highest trait (so the top
+   bar is always 100).
+3. Highlight the **top 3** traits on the report.
+
+The three education-preference questions **do not** change trait scores.
+
+---
+
+## College-fit paths
+
+A college-fit path is a **broad education style**, not a major and not a
+specific school. It answers: *given how you tend to act in situations, what kind
+of education route might fit?*
+
+| Path | Report says (roughly) | Plain meaning |
+| --- | --- | --- |
+| `structured` | A 4-year college is a strong fit | Degree-focused, longer formal programs |
+| `applied` | A hands-on or 2-year path may suit you best | Learn-by-doing, certificates, shorter programs |
+| `entrepreneurial` | Keep college flexible and goal-driven | Choose school on purpose—not “college by default” |
+| `mixed` | Your signals are mixed | Answers pointed in more than one direction |
+
+Each scenario option casts one path vote. After 8 scenarios, the app counts
+votes.
+
+### When the result is “mixed”
+
+Compare the top two path counts. If the leader wins by **fewer than 2 votes**,
+the scenario-based result is **mixed**.
+
+| Votes (structured / applied / entrepreneurial) | Result |
+| --- | ---: |
+| 4 / 3 / 1 | **mixed** (lead is only 1) |
+| 5 / 2 / 1 | **structured** (lead is 3) |
+
+### Education preference override
+
+Three follow-up questions ask about the student’s **stated plans**. These can
+change the **college-fit headline only**—not the trait bars.
+
+| If the student picks… | Path headline becomes… |
+| --- | --- |
+| Wants a required degree, structured classes, or several years of school | `structured` |
+| Wants practical skills, a shorter program first, or work before more school | `applied` |
+| Anything else | Keeps the scenario-based path (including `mixed`) |
+
+`entrepreneurial` can only come from scenario votes, not from these three
+questions.
+
+**Example:** Scenario votes say mixed, but the student picks “build practical
+skills” and “shorter program first” → report shows **applied**.
+
+### Research background (optional)
+
+We tie each path to O\*NET [Job Zones](https://www.onetonline.org/help/online/zones)
+(preparation level) and [Work Importance](https://www.onetonline.org/find/descriptor/browse/1.B.2/)
+values. The app itself only counts scenario votes—it does not read Job Zone
+scores directly.
+
+---
+
+## Majors and colleges
+
+### STEM major areas
+
+PathFinder suggests **eight broad STEM areas** (Biology, Chemistry, Physics,
+Environmental Science, Mathematics, Statistics/Data Science, Computer Science,
+Engineering). Each area has a trait profile documented in
+[scorecard-stem-mapping.md](./scorecard-stem-mapping.md).
+
+The app ranks areas by how well the student’s trait scores match each profile.
+
+### Georgia colleges
+
+College data comes from the federal [College Scorecard](https://collegescorecard.ed.gov/),
+cached in `lib/ga-colleges.json` (refreshed via `scripts/fetch-ga-colleges.mjs`).
+
+Schools are ranked by:
+
+1. STEM program overlap with the student’s top major areas
+2. Completion rate (higher is better)
+3. In-state tuition (lower is better)
+
+These rankings are **PathFinder’s own formula**, not an official Scorecard list.
+
+---
+
+## Developer reference
+
+| File | Contents |
+| --- | --- |
+| `lib/stem-scenarios.ts` | All 16 scenarios and per-option weights |
 | `lib/pathfinder-data.ts` | Trait labels, major-area profiles, types |
-| `lib/ga-colleges.json` | Cached Georgia public college dataset |
-| `lib/recommend.ts` | Scoring implementation — must stay aligned with this page |
-| [scorecard-stem-mapping.md](./scorecard-stem-mapping.md) | Evidence and rationale for the eight STEM major-area profiles |
+| `lib/ga-colleges.json` | Georgia public 4-year college dataset |
+| `lib/recommend.ts` | `generateReport()` and ranking logic |
+
+Do not duplicate scenario text in markdown—the TypeScript file is the source of
+truth.
+
+---
 
 ## O\*NET attribution
 
-Trait and theme mapping uses the [O\*NET Interest Profiler](https://www.onetcenter.org/IP.html)
-and its [Interest Profiler Short Form PDF](https://www.onetcenter.org/dl_tools/ipsf/Interest_Profiler.pdf).
-Job Zone and Work Importance references use [O\*NET OnLine](https://www.onetonline.org/).
-PathFinder's questions and scoring are original adaptations for exploration;
-they have not been validated by O\*NET or USDOL/ETA. PathFinder has modified
-this information into original scenarios. USDOL/ETA has not approved, endorsed,
-or tested these modifications. O\*NET® is a trademark of USDOL/ETA. Used under
-the [O\*NET Tools Developer License](https://www.onetcenter.org/license_tools.html).
+Trait mapping uses the [O\*NET Interest Profiler](https://www.onetcenter.org/IP.html)
+and [Short Form PDF](https://www.onetcenter.org/dl_tools/ipsf/Interest_Profiler.pdf).
+PathFinder’s questions and scoring are original adaptations for exploration and
+have not been validated by O\*NET or USDOL/ETA. Used under the
+[O\*NET Tools Developer License](https://www.onetcenter.org/license_tools.html).
+O\*NET® is a trademark of USDOL/ETA.
