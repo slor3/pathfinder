@@ -1,5 +1,9 @@
 # STEM major-area trait profiles
 
+Quiz scoring rules and the answer → report pipeline are in
+[construct-map.md](./construct-map.md). This page documents only the eight
+STEM major-area profiles and the evidence behind their trait weights.
+
 ## Scope and evidence
 
 PathFinder compares eight broad STEM areas. They are interest-matching profiles,

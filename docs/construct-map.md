@@ -1,16 +1,34 @@
-# Construct map (PAT-14)
+# Construct map
 
-Internal contract for how quiz answers become the report. `generateReport()` in `lib/recommend.ts` must follow this document. Per-option weights live in [scoring.md](./scoring.md) (PAT-13) and `lib/pathfinder-data.ts`; this page explains the constructs and rules those weights feed.
+Internal contract for how quiz answers become the report. `generateReport()` in
+`lib/recommend.ts` must follow this document. Scenario text and per-option
+weights live in `lib/stem-scenarios.ts`; major and college data live in
+`lib/pathfinder-data.ts` and `lib/ga-colleges.json`.
 
-Student-facing explanation is PAT-30, not this file.
+Student-facing explanation is on the research screen (`components/research-screen.tsx`), not this file.
 
-## Quiz format (absorbs PAT-15)
+## Quiz format
 
 PathFinder uses a **situation judgment test (SJT)** shape: a short **situation**, a **prompt** (“What’s your first move?”), and **four first-moves** with no single correct answer.
 
 We adapt the format described in Oswald et al. (2004), [*Structured interviews in employment settings*](https://doi.org/10.1037/0021-9010.89.2.187): situational stem plus behavioral response options. PathFinder writes **original** school-life situations. We do **not** copy Oswald appendix items or O\*NET Interest Profiler Like/Dislike statements.
 
-The quiz serves **eight** shuffled scenarios from the pool (`QUIZ_SIZE = 8`), then three **education preference** questions (see below). Helper text tells users there is no right answer.
+The quiz serves **eight** shuffled scenarios from a **16-item STEM pool**
+(`QUIZ_SIZE = 8` in `lib/recommend.ts`), then three **education preference**
+questions (see below). Helper text tells users there is no right answer.
+
+### Scenario pool (`lib/stem-scenarios.ts`)
+
+Each option adds trait weights (primary = 2, supporting = 1) and one path vote
+(`structured`, `applied`, or `entrepreneurial`). Each option also records a
+RIASEC interest theme and an `onetTheme` rationale. The weights and path votes
+are PathFinder design choices informed by those themes; they are not O\*NET
+scores.
+
+The pool uses original STEM-themed situations (environmental science, robotics,
+health data, computing, agriculture, and related fields). Scenario and option
+identifiers, labels, trait weights, paths, RIASEC themes, and rationales are
+maintained only in the TypeScript data file—do not duplicate them here.
 
 ## Six strength traits
 
@@ -43,7 +61,7 @@ Pathway questions do **not** change trait scores (see [Education preference ques
 
 College-fit paths are **not majors** and **not personality types**. They answer one question: given how someone tends to act in situations, **what kind of education route looks like the best fit?**
 
-Each scenario option carries one path vote. After eight scenarios, the app counts votes for `structured`, `applied`, and `entrepreneurial`. Path is **independent of RIASEC** — the same interest type can map to any path depending on the first-move (see [scoring.md](./scoring.md)). Labels are **suggestions**, not verdicts.
+Each scenario option carries one path vote. After eight scenarios, the app counts votes for `structured`, `applied`, and `entrepreneurial`. Path is **independent of RIASEC** — the same interest type can map to any path depending on the first-move (see `lib/stem-scenarios.ts`). Labels are **suggestions**, not verdicts.
 
 | Path (`PathSignal`) | Report headline (from `PATH_COPY`) | What it means | Real-world examples |
 | --- | --- | --- | --- |
@@ -113,7 +131,7 @@ Education preference answers **cannot** force `entrepreneurial`. That path comes
 ## Answer → report pipeline
 
 ```
-8 scenario answers (+ option weights from pathfinder-data.ts)
+8 scenario answers (+ option weights from stem-scenarios.ts)
   → trait totals → normalized traitScores + topTraits
   → path vote counts → scenario path (or mixed)
   → education preference answers → final path key + PATH_COPY text
@@ -133,16 +151,39 @@ top major matches
 | Suggested majors | `majors` | Trait vector × major profiles |
 | Recommended colleges | `colleges` | STEM CIP-family overlap, completion-rate percentile, and in-state tuition percentile |
 
-## Related docs
+## College and major data
 
-| File | Owns |
+**Colleges.** Georgia public four-year institutions come from the U.S.
+Department of Education [College Scorecard](https://collegescorecard.ed.gov/),
+fetched by [`scripts/fetch-ga-colleges.mjs`](../scripts/fetch-ga-colleges.mjs)
+and stored in [`lib/ga-colleges.json`](../lib/ga-colleges.json). The app ranks
+schools with its own STEM-program overlap, completion-rate, and in-state tuition
+scoring; those rankings are not official College Scorecard outputs.
+
+**Major-area profiles.** Eight broad STEM areas used for major recommendations
+are documented in [scorecard-stem-mapping.md](./scorecard-stem-mapping.md).
+Provisional trait weights there are informed by official Georgia university
+program descriptions. College Scorecard CIP titles indicate program
+availability; they do not establish that every school offers each area as a
+separate undergraduate degree.
+
+## Code and research references
+
+| Location | Owns |
 | --- | --- |
-| [scoring.md](./scoring.md) | PAT-13: every option’s text, RIASEC theme, traits, path |
-| [scorecard-stem-mapping.md](./scorecard-stem-mapping.md) | Eight STEM major-area profiles, catalog evidence, and availability limits |
-| [ggc-onet-research.md](./ggc-onet-research.md) | Earlier GGC program ↔ O\*NET occupation research crosswalk |
-| `lib/recommend.ts` | Implementation — must stay aligned with this page |
-| `lib/pathfinder-data.ts` | Scenario pool, trait labels, majors, colleges |
+| `lib/stem-scenarios.ts` | 16 STEM scenarios; per-option traits, paths, RIASEC, `onetTheme` |
+| `lib/pathfinder-data.ts` | Trait labels, major-area profiles, types |
+| `lib/ga-colleges.json` | Cached Georgia public college dataset |
+| `lib/recommend.ts` | Scoring implementation — must stay aligned with this page |
+| [scorecard-stem-mapping.md](./scorecard-stem-mapping.md) | Evidence and rationale for the eight STEM major-area profiles |
 
 ## O\*NET attribution
 
-Trait and theme mapping uses the [O\*NET Interest Profiler](https://www.onetcenter.org/IP.html). Job Zone and Work Importance references use [O\*NET OnLine](https://www.onetonline.org/). PathFinder has modified this information into original scenarios. USDOL/ETA has not approved, endorsed, or tested these modifications. Used under the [O\*NET Tools Developer License](https://www.onetcenter.org/license_tools.html).
+Trait and theme mapping uses the [O\*NET Interest Profiler](https://www.onetcenter.org/IP.html)
+and its [Interest Profiler Short Form PDF](https://www.onetcenter.org/dl_tools/ipsf/Interest_Profiler.pdf).
+Job Zone and Work Importance references use [O\*NET OnLine](https://www.onetonline.org/).
+PathFinder's questions and scoring are original adaptations for exploration;
+they have not been validated by O\*NET or USDOL/ETA. PathFinder has modified
+this information into original scenarios. USDOL/ETA has not approved, endorsed,
+or tested these modifications. O\*NET® is a trademark of USDOL/ETA. Used under
+the [O\*NET Tools Developer License](https://www.onetcenter.org/license_tools.html).

@@ -52,9 +52,10 @@ No `.env` is required for the current prototype. Copy `.env.example` to `.env.lo
 | --- | --- |
 | `app/` | Next.js app shell |
 | `components/` | Landing, profile, quiz, and report screens |
-| `docs/scoring.md` | PAT-13: every quiz option → RIASEC, traits, path |
-| `docs/construct-map.md` | PAT-14: traits, paths, mixed rule, and `generateReport()` contract |
-| `lib/pathfinder-data.ts` | Scenarios, majors, colleges, trait labels |
+| `docs/construct-map.md` | Scoring rules, traits, paths, and `generateReport()` contract |
+| `docs/scorecard-stem-mapping.md` | STEM major-area profiles and catalog/O*NET evidence |
+| `lib/stem-scenarios.ts` | 16 STEM quiz scenarios and per-option weights |
+| `lib/pathfinder-data.ts` | Major profiles, trait labels, types |
+| `lib/ga-colleges.json` | Cached Georgia public college dataset |
 | `lib/recommend.ts` | Scoring and ranking |
 | `lib/storage.ts` | Saved reports in `localStorage` |
-| `docs/ggc-onet-research.md` | Georgia Gwinnett College and O*NET program-mapping research |
