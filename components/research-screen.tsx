@@ -28,16 +28,34 @@ const SOURCES = [
     label: "Explore College Scorecard",
   },
   {
-    title: "O*NET occupations",
-    body: "We compare GGC programs with representative O*NET occupations to check whether documented work activities support the trait-to-major mapping. O*NET is research evidence only; PathFinder does not recommend jobs. O*NET information is used under the O*NET Tools Developer License.",
-    href: "https://www.onetonline.org/",
+    title: "NCES Classification of Instructional Programs",
+    body: "College Scorecard program titles use CIP codes. These broad reporting groups help compare program availability, but do not replace institution catalog descriptions or establish that each area is a standalone degree at each school.",
+    href: "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=56",
+    label: "Browse the CIP taxonomy",
+  },
+  {
+    title: "O*NET occupation descriptions",
+    body: "Representative occupation descriptions and work activities help inform the provisional trait profiles for each broad STEM area. Occupations are examples of related work, not a complete definition of a major. O*NET information is used under the O*NET Tools Developer License.",
+    href: "https://www.onetonline.org/link/summary/15-1252.00",
     label: "Explore O*NET occupations",
   },
   {
-    title: "Georgia Gwinnett College degrees",
-    body: "We started by mapping the traits to all 19 bachelor's programs listed by Georgia Gwinnett College. Those program profiles are suggestions for exploration, not official GGC classifications or guarantees of fit.",
-    href: "https://www.ggc.edu/academics/degrees-and-programs",
-    label: "View GGC degrees and programs",
+    title: "University of Georgia Bulletin",
+    body: "The 2026–2027 undergraduate bulletin provides descriptions for biology, chemistry, physics, mathematics, statistics, data science, computer science, and discipline-specific engineering programs.",
+    href: "https://bulletin.uga.edu/Program/Index",
+    label: "Browse UGA programs",
+  },
+  {
+    title: "Georgia Southern degree programs",
+    body: "Georgia Southern's program listings describe undergraduate programs including biology, chemistry, physics, computer science, mathematical sciences, geosciences, and several engineering disciplines.",
+    href: "https://www.georgiasouthern.edu/degrees",
+    label: "Browse Georgia Southern programs",
+  },
+  {
+    title: "Georgia State geosciences programs",
+    body: "Georgia State describes its geosciences degree and environmental-geosciences and environmental-science concentrations. These provide related evidence for environmental pathways, not proof that all eight profiles are standalone degrees at each school.",
+    href: "https://geosciences.gsu.edu/",
+    label: "Explore Georgia State geosciences",
   },
 ]
 
@@ -91,7 +109,7 @@ export function ResearchScreen({ onBack }: Props) {
         </h2>
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <Card className="p-5">
-            <h3 className="font-semibold">Six traits and major mapping</h3>
+            <h3 className="font-semibold">Six traits and major-area mapping</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               PathFinder records six traits: analytical, investigative, creative, social,
               hands-on, and leadership. The scenario options also carry a RIASEC interest theme
@@ -108,6 +126,18 @@ export function ResearchScreen({ onBack }: Props) {
               every quiz randomly selects eight. The option weights are provisional design
               choices informed by RIASEC themes, not research-proven measurements, and should be
               reviewed and tested.
+            </p>
+          </Card>
+          <Card className="p-5 md:col-span-2">
+            <h3 className="font-semibold">Eight STEM major profiles</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Major suggestions are currently grouped into Biology, Chemistry, Physics,
+              Environmental Science, Mathematics, Statistics / Data Science, Computer Science,
+              and Engineering. Their provisional trait weights are informed by official program
+              descriptions at Georgia public universities, with O*NET occupations as supporting
+              context. These are matching areas, not a claim that every school offers all eight as
+              separate undergraduate degrees; some are represented by concentrations or related
+              programs. See the mapping notes for those coverage limits.
             </p>
           </Card>
           <Card className="p-5 md:col-span-2">

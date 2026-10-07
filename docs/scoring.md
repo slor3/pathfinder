@@ -41,3 +41,10 @@ The college dataset is fetched from the U.S. Department of Education's
 [`lib/ga-colleges.json`](../lib/ga-colleges.json). The app ranks colleges using
 its own STEM-program overlap, completion-rate, and in-state tuition scoring;
 those recommendations are not official College Scorecard rankings.
+
+The eight broad STEM major-area profiles used to recommend programs are
+documented in [`scorecard-stem-mapping.md`](./scorecard-stem-mapping.md). Their
+provisional trait weights are informed by official Georgia university program
+descriptions. College Scorecard CIP titles help indicate program availability
+but do not provide curriculum descriptions or establish that every school
+offers each area as a separate undergraduate degree.

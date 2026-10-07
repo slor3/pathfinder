@@ -159,7 +159,7 @@ export function generateReport(
     return { major, score }
   })
     .sort((a, b) => b.score - a.score)
-    .slice(0, 4)
+    .slice(0, MAJORS.length)
 
   // 4. Determine the recommended path.
   const rankedPaths = (Object.keys(pathBreakdown) as PathSignal[]).sort(

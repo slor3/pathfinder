@@ -23,9 +23,13 @@ Each scenario option adds trait weights (primary = 2, secondary = 1). Traits are
 | `creative` | Creative | Artistic (A) |
 | `social` | People-focused | Social (S) |
 | `leadership` | Leadership | Enterprising (E) |
-| `analytical` | Analytical | Conventional (C) |
+| `analytical` | Analytical | Conventional (C), with some Investigative (I) overlap |
 
-**Analytical** maps only to Conventional. **Investigative** maps only to Investigative. They are separate constructs so a “research first” move and a “checklist/process first” move score differently.
+**Analytical** and **Investigative** remain separate PathFinder traits, but real
+activities can involve both. Data analysis, for example, can be Investigative
+when exploring evidence and Analytical when evaluating or organizing it. A
+“research first” move and a “checklist/process first” move should still have
+different primary signals.
 
 ### Trait scoring (`generateReport` steps 1–2)
 
@@ -115,10 +119,11 @@ Education preference answers **cannot** force `entrepreneurial`. That path comes
   → education preference answers → final path key + PATH_COPY text
 
 trait totals + MAJORS profiles
-  → dot-product major scores → top 4 majors
+  → dot-product major scores → ranked major-area profiles
 
-top major clusters + region + path leading vote
-  → college scores → ranked in-state schools
+top major matches
+  → CIP-family overlap + completion-rate percentile + inverse tuition percentile
+  → ranked Georgia public colleges
 ```
 
 | Report section | Source in code | Driven by |
@@ -126,14 +131,15 @@ top major clusters + region + path leading vote
 | Strength bars | `traitScores`, `topTraits` | Scenario option trait weights |
 | College-fit headline | `path` | Path votes + education preference override + mixed rule |
 | Suggested majors | `majors` | Trait vector × major profiles |
-| Nearby schools | `colleges` | Region, major clusters, college type vs leading path |
+| Recommended colleges | `colleges` | STEM CIP-family overlap, completion-rate percentile, and in-state tuition percentile |
 
 ## Related docs
 
 | File | Owns |
 | --- | --- |
 | [scoring.md](./scoring.md) | PAT-13: every option’s text, RIASEC theme, traits, path |
-| [ggc-onet-research.md](./ggc-onet-research.md) | GGC program ↔ O\*NET occupation crosswalk (major profiles) |
+| [scorecard-stem-mapping.md](./scorecard-stem-mapping.md) | Eight STEM major-area profiles, catalog evidence, and availability limits |
+| [ggc-onet-research.md](./ggc-onet-research.md) | Earlier GGC program ↔ O\*NET occupation research crosswalk |
 | `lib/recommend.ts` | Implementation — must stay aligned with this page |
 | `lib/pathfinder-data.ts` | Scenario pool, trait labels, majors, colleges |
 

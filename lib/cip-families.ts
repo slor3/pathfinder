@@ -1,31 +1,32 @@
 import type { College } from "./pathfinder-data"
 
-/** STEM CIP 2-digit families per PAT-26 / College Scorecard fetch script. */
+/** STEM major areas used in the compare table. Several are grouped into the same
+ * 2-digit CIP family in the Scorecard data, but we still show distinct major areas
+ * to match the app's eight-area STEM model.
+ */
 export const STEM_CIP_FAMILIES = [
-  { code: "11", label: "IT" },
+  { code: "11", label: "Computer Science" },
   { code: "14", label: "Engineering" },
   { code: "26", label: "Biology" },
-  { code: "27", label: "Math" },
-  { code: "40", label: "Physical Sciences" },
-  { code: "41", label: "Science Tech" },
+  { code: "27", label: "Mathematics" },
+  { code: "27", label: "Statistics / Data Science" },
+  { code: "40", label: "Chemistry" },
+  { code: "40", label: "Physics" },
+  { code: "40", label: "Environmental Science" },
 ] as const
 
 export type StemCipFamilyCode = (typeof STEM_CIP_FAMILIES)[number]["code"]
 
 /** CIP 2-digit families aligned with each major for college STEM overlap scoring. */
 export const MAJOR_CIP_FAMILIES: Record<string, string[]> = {
-  cs: ["11"],
+  biology: ["26"],
+  chemistry: ["40"],
+  physics: ["40"],
+  "environmental-science": ["40"],
+  mathematics: ["27"],
+  "statistics-data-science": ["27"],
+  "computer-science": ["11"],
   engineering: ["14"],
-  biology: ["26", "40", "41"],
-  nursing: ["51"],
-  psychology: ["42"],
-  business: ["52"],
-  marketing: ["52"],
-  design: ["50"],
-  "fine-arts": ["50"],
-  education: ["13"],
-  "skilled-trades": ["15"],
-  culinary: ["12"],
 }
 
 export function getCollegeCipFamilies(college: College): Set<string> {
