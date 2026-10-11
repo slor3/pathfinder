@@ -12,6 +12,7 @@ import { countStemFamilyOverlap } from "./cip-families"
 const TRAITS: Trait[] = ["analytical", "creative", "social", "handsOn", "leadership", "investigative"]
 
 const DISPLAY_COLLEGE_LIMIT = 10
+const DISPLAY_MAJOR_LIMIT = 3
 
 export type Answers = Record<string, string> // scenarioId -> optionId
 export type PathwayAnswers = {
@@ -159,7 +160,7 @@ export function generateReport(
     return { major, score }
   })
     .sort((a, b) => b.score - a.score)
-    .slice(0, 4)
+    .slice(0, DISPLAY_MAJOR_LIMIT)
 
   // 4. Determine the recommended path.
   const rankedPaths = (Object.keys(pathBreakdown) as PathSignal[]).sort(

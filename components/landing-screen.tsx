@@ -57,7 +57,7 @@ export function LandingScreen({ onStart, onResearch, savedReports, onViewSaved }
               <BookOpen className="size-4" aria-hidden />
             </Button>
             <span className="text-sm text-muted-foreground">
-              Takes about 3 minutes · 8 questions · No account required
+              Takes about 3 minutes · 11 questions · No account required
             </span>
           </div>
         </div>

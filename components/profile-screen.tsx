@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { ArrowRight } from "lucide-react"
-import { GEORGIA_REGION } from "@/lib/pathfinder-data"
+import { GEORGIA_REGION, type Region } from "@/lib/pathfinder-data"
 import type { Profile } from "@/lib/storage"
 
 type Props = {
@@ -22,17 +22,11 @@ type Props = {
   onBack: () => void
 }
 
-const STAGES: { value: Profile["stage"]; label: string }[] = [
-  { value: "hs-senior", label: "High school senior" },
-  { value: "freshman", label: "College freshman / undecided" },
-  { value: "returning", label: "Adult returning to school" },
-]
+const REGIONS: Region[] = [GEORGIA_REGION]
 
 export function ProfileScreen({ initial, onContinue, onBack }: Props) {
   const [name, setName] = useState(initial?.name ?? "")
-  const [stage, setStage] = useState<Profile["stage"] | "">(initial?.stage ?? "")
-
-  const valid = stage !== ""
+  const [region, setRegion] = useState<Region>(initial?.region ?? GEORGIA_REGION)
 
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-lg flex-col justify-center px-4 py-12">
@@ -41,7 +35,7 @@ export function ProfileScreen({ initial, onContinue, onBack }: Props) {
         Let&apos;s set up your profile
       </h1>
       <p className="mt-2 text-muted-foreground">
-        We use this to tailor your report and recommend Georgia public colleges.
+        We use this to tailor your report and recommend public colleges in your state.
       </p>
       <p className="mt-2 text-sm text-muted-foreground">
         No account is needed — finish the scenarios to see your report.
@@ -49,7 +43,7 @@ export function ProfileScreen({ initial, onContinue, onBack }: Props) {
 
       <Card className="mt-6 space-y-5 p-6">
         <div className="space-y-2">
-          <Label htmlFor="name">Your name (optional)</Label>
+          <Label htmlFor="name">Your name</Label>
           <Input
             id="name"
             value={name}
@@ -60,23 +54,22 @@ export function ProfileScreen({ initial, onContinue, onBack }: Props) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="stage">Where are you right now?</Label>
-          <Select value={stage} onValueChange={(v) => setStage(v as Profile["stage"])}>
-            <SelectTrigger id="stage" className="w-full">
-              <SelectValue placeholder="Select your stage" />
+          <Label htmlFor="region">Location</Label>
+          <Select value={region} onValueChange={(v) => setRegion(v as Region)}>
+            <SelectTrigger id="region" className="w-full">
+              <SelectValue placeholder="Select your state" />
             </SelectTrigger>
             <SelectContent>
-              {STAGES.map((s) => (
-                <SelectItem key={s.value} value={s.value}>
-                  {s.label}
+              {REGIONS.map((value) => (
+                <SelectItem key={value} value={value}>
+                  {value}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-        </div>
-
-        <div className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
-          PathFinder recommends in-state public 4-year colleges in {GEORGIA_REGION}.
+          <p className="text-sm text-muted-foreground">
+            PathFinder recommends in-state public 4-year colleges in the state you select.
+          </p>
         </div>
       </Card>
 
@@ -86,13 +79,10 @@ export function ProfileScreen({ initial, onContinue, onBack }: Props) {
         </Button>
         <Button
           className="gap-2"
-          disabled={!valid}
           onClick={() =>
-            valid &&
             onContinue({
               name: name.trim(),
-              stage: stage as Profile["stage"],
-              region: GEORGIA_REGION,
+              region,
             })
           }
         >

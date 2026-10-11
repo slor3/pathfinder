@@ -137,9 +137,6 @@ export function QuizScreen({ initial, initialPathway, onComplete, onExit }: Prop
               {scenario.situation}
             </p>
             <p className="mt-4 font-display text-lg font-semibold">{scenario.prompt}</p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              There is no right answer — choose the first move that feels most like you.
-            </p>
           </>
         )}
 
@@ -178,6 +175,12 @@ export function QuizScreen({ initial, initialPathway, onComplete, onExit }: Prop
             )
           })}
         </div>
+
+        {!isPathway ? (
+          <p className="mt-4 text-sm text-muted-foreground">
+            There is no right answer — choose the first move that feels most like you.
+          </p>
+        ) : null}
       </div>
 
       <div className="mt-6 flex items-center justify-between">
