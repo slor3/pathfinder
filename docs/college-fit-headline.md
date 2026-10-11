@@ -1,99 +1,88 @@
-# How answers build the college-fit headline
+# How answers become the college-fit headline
 
-This page is for teammates and reviewers. It explains **exactly** how quiz
-choices become the headline on the report card (“Does college fit your goals?”).
-
-Implementation: `lib/college-path.ts` and `generateReport()` in `lib/recommend.ts`.
+The report card **“Does college fit your goals?”** shows a headline and short
+summary. Those words come from counting votes—not from a hidden formula.
 
 ---
 
-## Idea in one sentence
+## The three possible headlines
 
-Each answer adds **one vote** to one of three college-bound paths. The headline
-is the path with the most votes, unless the top two are **within 1 vote**—then
-the headline is **mixed**.
-
-No extra matching formula: it is a **transparent tally**.
-
----
-
-## The three paths
-
-| Path | What we mean (Georgia, college-bound) |
+| Path name | What the headline is about |
 | --- | --- |
-| **structured** | Explore a 4-year STEM degree at a public university |
-| **applied** | Hands-on or 2-year start, then transfer toward a 4-year STEM degree |
-| **flexible** | Interdisciplinary / project-style STEM within a university degree |
+| **Structured** | Exploring a **4-year STEM degree** at a Georgia public university |
+| **Applied** | A **hands-on or 2-year start**, then transferring toward a 4-year STEM degree |
+| **Flexible** | A **flexible, interdisciplinary STEM track** in college |
+| **Mixed** | Your answers pointed in **more than one direction**—explore before deciding |
 
 ---
 
-## Step 1 — Eight scenario answers
+## How counting works
 
-For each STEM scenario the student completes, their chosen option includes:
+1. Each answer you give can add **+1 vote** to structured, applied, or flexible.
+2. Add up all votes from **8 scenarios** plus up to **3 pathway questions**.
+3. The path with the **most votes** wins—**unless** the top two are only **1 vote
+   apart**. Then the headline is **mixed**.
 
-| Field | Role |
+| Total votes (example) | Headline |
 | --- | --- |
-| `path` | Which path gets **+1 vote** |
-| `riasec` | Holland interest code (R, I, A, S, E, C) for research traceability |
-| `onetTheme` | Short note tying the option to O\*NET-style work themes |
-
-Scenario options are labeled using the **RIASEC path guide** in
-`lib/college-path.ts` (`RIASEC_PATH_GUIDE`). Authors set `path` per option
-following that rubric (some Social options differ if the first move is teaching
-vs fieldwork).
-
-**Example:** Choosing “Run tests to find out what is causing the error” adds
-**+1 structured** (Investigative / formal study theme).
+| Structured 6, Applied 2, Flexible 1 | **Structured** (lead by 4) |
+| Applied 5, Structured 4, Flexible 0 | **Mixed** (lead by only 1) |
+| Flexible 5, Structured 3, Applied 1 | **Flexible** (lead by 2) |
+| Structured 4, Applied 4, Flexible 2 | **Mixed** (tied at top) |
 
 ---
 
-## Step 2 — Three pathway answers
+## Table: pathway questions → vote
 
-After scenarios, three questions about education plans may each add **+1 vote**
-when the answer matches a rule in `PATHWAY_VOTE_RULES` (`lib/college-path.ts`).
+These three questions come **after** the scenarios. Each matching answer adds
+**one vote**. “Unsure” or “explore” answers add **no vote**.
 
-| Question topic | Example answer that votes | Path |
+| Question | If you choose… | Adds 1 vote to |
 | --- | --- | --- |
-| Education goal | Degree required for career | structured |
-| Education goal | Build practical skills soon | applied |
-| Learning preference | Several years of structured classes | structured |
-| Learning preference | Shorter courses, practical training | applied |
-| Commitment | Comfortable with several years | structured |
-| Commitment | Shorter program first / work before committing | applied |
-| Unsure / explore | *(no vote)* | — |
+| What do you hope your next step will help you do? | Earn a degree for a career that requires it | **Structured** |
+| What do you hope your next step will help you do? | Build practical skills for work as soon as possible | **Applied** |
+| What do you hope your next step will help you do? | Explore subjects / not sure yet | *(none)* |
+| Which learning setup sounds most sustainable? | Several years of structured classes and assignments | **Structured** |
+| Which learning setup sounds most sustainable? | Shorter courses with projects and practical training | **Applied** |
+| Which learning setup sounds most sustainable? | A mix / still figuring it out | *(none)* |
+| How do you feel about a program that may take several years? | Comfortable with several years if it supports my goal | **Structured** |
+| How do you feel about a program that may take several years? | Prefer a shorter program first | **Applied** |
+| How do you feel about a program that may take several years? | Work, train, or explore before committing | **Applied** |
+| How do you feel about a program that may take several years? | Unsure | *(none)* |
 
-A student can earn votes on **both** structured and applied from pathway
-questions (for example, “degree required” plus “shorter program first”). That
-is intentional and can push the result toward **mixed**.
-
----
-
-## Step 3 — Pick the headline
-
-1. Add scenario votes + pathway votes → totals for structured, applied, flexible.
-2. Sort totals. If **first − second ≥ 2**, use that path’s copy from `PATH_COPY`.
-3. Otherwise use **mixed** copy.
-
-`flexible` only receives votes from scenarios (design / leadership / project
-first-moves), not from pathway questions.
+You can earn votes for **both** structured and applied from these three
+questions. That can make the final count closer and lead to a **mixed** headline.
 
 ---
 
-## See it on the report
+## Table: scenario first moves → vote
 
-The report shows vote totals on the college-fit card and an expandable list:
-**“See how your answers counted.”** Each line is one **+1** vote and which
-answer caused it.
+Each of your **8 scenario** answers adds **one vote**. The app stores the vote
+on each option in `lib/stem-scenarios.ts`. Most options also carry a **RIASEC**
+interest code (from Holland / O\*NET research themes). The usual pattern:
+
+| If your first move is mostly… (RIASEC) | Usual vote |
+| --- | --- |
+| **R** — hands-on, tools, equipment, field work | **Applied** |
+| **I** — tests, data, experiments, analysis | **Structured** |
+| **C** — organizing records, checklists, documentation | **Structured** |
+| **A** — design, visuals, new product ideas | **Flexible** |
+| **E** — lead a project, coordinate people | **Flexible** |
+| **S** — help, teach, or talk with people | **Structured** or **Applied** (depends on the scenario) |
+
+The exact vote is set per answer choice in the scenario pool (for example,
+“Run tests to find the cause” → **Structured**).
+
+**Flexible** votes come **only** from scenarios, not from the three pathway
+questions.
 
 ---
 
-## Research backing (no new algorithm)
+## On the report
 
-- **Scenarios:** Situational-judgment format; RIASEC labels align with Holland
-  and O\*NET Interest themes (see research screen sources).
-- **Pathway questions:** Paraphrased education-planning prompts; rules are
-  documented in code, not learned from data.
-- **Headline:** Mode of labeled votes with a mixed band—an **operational
-  definition** suitable for class documentation, not a clinical assessment.
+The college-fit card shows the vote totals (structured / applied / flexible).
+Open **“How your answers map to this headline”** to see each **+1** vote and
+which choice caused it.
 
-For major matching and colleges, see [How scoring works](./construct-map.md).
+Technical reference: `lib/college-path.ts`, `lib/recommend.ts`. For traits,
+majors, and schools, see [How scoring works](./construct-map.md).

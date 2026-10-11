@@ -126,29 +126,31 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
               ) : (
                 <ChevronDown className="size-4" aria-hidden />
               )}
-              {showPathVotes ? "Hide how votes were counted" : "See how your answers counted"}
+              {showPathVotes ? "Hide answer map" : "How your answers map to this headline"}
             </button>
             {showPathVotes && (
-              <ul className="mt-3 space-y-2 border-t border-border/60 pt-3 text-sm">
-                {(report.pathContributions ?? []).map((vote, index) => (
-                  <li key={`${vote.kind}-${index}`} className="leading-relaxed text-muted-foreground">
-                    <span className="font-medium text-foreground">
-                      +1 {PATH_VOTE_LABELS[vote.path]}
-                    </span>
-                    {vote.kind === "scenario" ? (
-                      <>
-                        {" "}
-                        — scenario: “{vote.optionLabel}” (RIASEC {vote.riasec})
-                      </>
-                    ) : (
-                      <>
-                        {" "}
-                        — pathway: “{vote.choiceLabel}”
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ul>
+              <div className="mt-3 overflow-x-auto border-t border-border/60 pt-3">
+                <table className="w-full min-w-[320px] text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-border/60 text-muted-foreground">
+                      <th className="pb-2 pr-3 font-medium">Adds vote to</th>
+                      <th className="pb-2 font-medium">Your answer</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(report.pathContributions ?? []).map((vote, index) => (
+                      <tr key={`${vote.kind}-${index}`} className="border-b border-border/40">
+                        <td className="py-2 pr-3 align-top font-medium text-foreground">
+                          +1 {PATH_VOTE_LABELS[vote.path]}
+                        </td>
+                        <td className="py-2 align-top text-muted-foreground">
+                          {vote.kind === "scenario" ? vote.optionLabel : vote.choiceLabel}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>
