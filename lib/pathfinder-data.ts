@@ -51,14 +51,8 @@ export function getRandomizedQuizQuestions(): Scenario[] {
   return shuffled.slice(0, QUIZ_SIZE)
 }
 
-export type Cluster =
-  | "stem"
-  | "health"
-  | "business"
-  | "arts"
-  | "trades"
-  | "social-sciences"
-  | "education"
+/** All report majors are STEM areas (Sprint 2 scope). */
+export type Cluster = "stem"
 
 export type Major = {
   id: string
@@ -138,12 +132,6 @@ export const MAJORS: Major[] = [
 
 export const CLUSTER_LABELS: Record<Cluster, string> = {
   stem: "STEM",
-  health: "Health",
-  business: "Business",
-  arts: "Arts & Media",
-  trades: "Skilled Trades",
-  "social-sciences": "Social Sciences",
-  education: "Education",
 }
 
 import gaCollegesData from "./ga-colleges.json"
