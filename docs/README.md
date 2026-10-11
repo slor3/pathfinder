@@ -22,8 +22,8 @@ starting points for conversation, not final answers.
    STEM exploration), applied (hands-on start with transfer toward a bachelor's),
    or flexible (interdisciplinary STEM in college). If answers are too close,
    the result is **mixed**.
-4. Three short **education preference** questions can adjust the college-fit
-   headline—they do not change trait scores.
+4. Three short **education preference** questions add extra path votes (combined
+   with scenarios for the college-fit headline—they do not change trait scores).
 5. The report shows strength bars, a college-fit suggestion, **top STEM major
    areas**, and **ranked Georgia public colleges**.
 

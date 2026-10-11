@@ -101,33 +101,43 @@ of education route might fit?*
 | `mixed` | Your signals are mixed | Answers pointed in more than one direction |
 
 Each scenario option casts one path vote. After 8 scenarios, the app counts
-votes.
+votes. Three education-preference answers can each add **one more vote** to
+`structured` or `applied` (never `flexible`). The headline uses the **combined**
+tally.
 
 ### When the result is “mixed”
 
-Compare the top two path counts. If the leader wins by **fewer than 2 votes**,
-the scenario-based result is **mixed**.
+Compare the top two path counts (scenarios + pathway votes). If the leader wins
+by **fewer than 2 votes**, the result is **mixed**.
 
 | Votes (structured / applied / flexible) | Result |
 | --- | ---: |
 | 4 / 3 / 1 | **mixed** (lead is only 1) |
 | 5 / 2 / 1 | **structured** (lead is 3) |
 
-### Education preference override
+### Education preference votes (combined with scenarios)
 
-Three follow-up questions ask about the student’s **stated plans**. These can
-change the **college-fit headline only**—not the trait bars.
+Three follow-up questions ask about the student’s **stated plans**. They add
+votes to the same tally—they do **not** replace scenario votes. They also do
+**not** change trait bars.
 
-| If the student picks… | Path headline becomes… |
+| If any answer matches… | Adds one vote to… |
 | --- | --- |
-| Wants a required degree, structured classes, or several years of school | `structured` |
-| Wants practical skills, applied/hands-on learning, a shorter program first, or work before more school | `applied` |
-| Anything else | Keeps the scenario-based path (including `mixed`) |
+| Required degree, structured classes, or several years of school | `structured` |
+| Practical skills, applied/hands-on learning, shorter program first, or work before more school | `applied` |
+| Unsure / explore / mixed | *(no extra vote)* |
+
+A student can earn **both** a structured and an applied pathway vote in the same
+quiz (for example, “degree required” plus “shorter program first”). That is
+intentional—it can push the result toward **mixed**.
 
 `flexible` can only come from scenario votes, not from these three questions.
 
-**Example:** Scenario votes say mixed, but the student picks “build practical
-skills” and “shorter program first” → report shows **applied**.
+**Example:** Scenarios are 4 structured / 3 applied / 1 flexible (mixed by 1).
+The student also picks practical skills and shorter program first → +2 applied →
+5 applied / 4 structured → **applied** wins by 1 → headline stays **mixed**.
+Another run with 5 structured scenario votes plus a degree-required answer →
+6 structured → **structured** headline.
 
 ### Research background (optional)
 

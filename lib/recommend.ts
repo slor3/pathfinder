@@ -138,6 +138,16 @@ export function generateReport(
     pathBreakdown[option.path] += 1
   }
 
+  if (pathwayAnswers) {
+    if (pathwayAnswers.educationGoal === "degree-required") pathBreakdown.structured += 1
+    if (pathwayAnswers.learningPreference === "structured") pathBreakdown.structured += 1
+    if (pathwayAnswers.commitment === "several-years") pathBreakdown.structured += 1
+    if (pathwayAnswers.educationGoal === "practical-skills") pathBreakdown.applied += 1
+    if (pathwayAnswers.learningPreference === "applied") pathBreakdown.applied += 1
+    if (pathwayAnswers.commitment === "shorter-first") pathBreakdown.applied += 1
+    if (pathwayAnswers.commitment === "work-first") pathBreakdown.applied += 1
+  }
+
   // 2. Normalize traits to 0-100.
   const max = Math.max(1, ...TRAITS.map((t) => raw[t]))
   const traitScores = {} as Record<Trait, number>
@@ -167,21 +177,10 @@ export function generateReport(
     (a, b) => pathBreakdown[b] - pathBreakdown[a],
   )
   const leadingPath = rankedPaths[0]
-  const scenarioPath =
+  const pathKey: PathSignal | "mixed" =
     pathBreakdown[leadingPath] - pathBreakdown[rankedPaths[1]] >= 2
       ? leadingPath
       : "mixed"
-  const pathKey =
-    pathwayAnswers?.educationGoal === "degree-required" ||
-    pathwayAnswers?.learningPreference === "structured" ||
-    pathwayAnswers?.commitment === "several-years"
-      ? "structured"
-      : pathwayAnswers?.educationGoal === "practical-skills" ||
-          pathwayAnswers?.learningPreference === "applied" ||
-          pathwayAnswers?.commitment === "shorter-first" ||
-          pathwayAnswers?.commitment === "work-first"
-        ? "applied"
-        : scenarioPath
 
   // 5. Rank Georgia public colleges by STEM CIP overlap, completion rate, and in-state tuition.
   const collegeMatches = rankColleges(majorMatches)
