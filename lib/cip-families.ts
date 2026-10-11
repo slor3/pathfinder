@@ -5,14 +5,14 @@ import type { College } from "./pathfinder-data"
  * to match the app's eight-area STEM model.
  */
 export const STEM_CIP_FAMILIES = [
-  { code: "11", label: "Computer Science" },
-  { code: "14", label: "Engineering" },
-  { code: "26", label: "Biology" },
-  { code: "27", label: "Mathematics" },
-  { code: "27", label: "Statistics / Data Science" },
-  { code: "40", label: "Chemistry" },
-  { code: "40", label: "Physics" },
-  { code: "40", label: "Environmental Science" },
+  { id: "computer-science", code: "11", label: "Computer Science" },
+  { id: "engineering", code: "14", label: "Engineering" },
+  { id: "biology", code: "26", label: "Biology" },
+  { id: "mathematics", code: "27", label: "Mathematics" },
+  { id: "statistics-data-science", code: "27", label: "Statistics / Data Science" },
+  { id: "chemistry", code: "40", label: "Chemistry" },
+  { id: "physics", code: "40", label: "Physics" },
+  { id: "environmental-science", code: "40", label: "Environmental Science" },
 ] as const
 
 export type StemCipFamilyCode = (typeof STEM_CIP_FAMILIES)[number]["code"]

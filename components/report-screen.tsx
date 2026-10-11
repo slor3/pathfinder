@@ -309,7 +309,7 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
                 </tr>
                 {STEM_CIP_FAMILIES.map((family, index) => (
                   <tr
-                    key={family.code}
+                    key={family.id}
                     className={
                       index < STEM_CIP_FAMILIES.length - 1 || showStemDetails
                         ? "border-b border-border/60"
