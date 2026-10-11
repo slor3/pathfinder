@@ -18,9 +18,10 @@ starting points for conversation, not final answers.
    Each answer has no right or wrong option.
 2. The app adds up **six trait scores** (for example, analytical, hands-on,
    creative) from those answers.
-3. The app also counts **college-fit path** votes: structured (degree-focused),
-   applied (hands-on / shorter programs), or entrepreneurial (flexible /
-   goal-driven). If answers are too close, the result is **mixed**.
+3. The app also counts **college-fit path** votes: structured (Georgia 4-year
+   STEM exploration), applied (hands-on start with transfer toward a bachelor's),
+   or flexible (interdisciplinary STEM in college). If answers are too close,
+   the result is **mixed**.
 4. Three short **education preference** questions can adjust the college-fit
    headline—they do not change trait scores.
 5. The report shows strength bars, a college-fit suggestion, **top STEM major

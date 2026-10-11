@@ -49,7 +49,7 @@ Every option a student can pick includes:
 | Field | What it does |
 | --- | --- |
 | **Trait weights** | Adds points to up to two traits (main choice = 2, secondary = 1) |
-| **Path vote** | Votes for `structured`, `applied`, or `entrepreneurial` |
+| **Path vote** | Votes for `structured`, `applied`, or `flexible` |
 | **RIASEC theme** | Research label (R, I, A, S, E, or C) tied to O\*NET interest areas |
 | **onetTheme** | Short note on why that option maps to a theme (for documentation) |
 
@@ -95,9 +95,9 @@ of education route might fit?*
 
 | Path | Report says (roughly) | Plain meaning |
 | --- | --- | --- |
-| `structured` | A 4-year college is a strong fit | Degree-focused, longer formal programs |
-| `applied` | A hands-on or 2-year path may suit you best | Learn-by-doing, certificates, shorter programs |
-| `entrepreneurial` | Keep college flexible and goal-driven | Choose school on purpose—not “college by default” |
+| `structured` | Explore a 4-year STEM degree at a Georgia public university | Default college-bound STEM bachelor's exploration |
+| `applied` | Consider a hands-on start with a 2-year transfer path | Community/technical college first, then transfer toward a 4-year STEM degree |
+| `flexible` | Explore a flexible, interdisciplinary STEM track in college | Interdisciplinary or project-based STEM within a university degree |
 | `mixed` | Your signals are mixed | Answers pointed in more than one direction |
 
 Each scenario option casts one path vote. After 8 scenarios, the app counts
@@ -108,7 +108,7 @@ votes.
 Compare the top two path counts. If the leader wins by **fewer than 2 votes**,
 the scenario-based result is **mixed**.
 
-| Votes (structured / applied / entrepreneurial) | Result |
+| Votes (structured / applied / flexible) | Result |
 | --- | ---: |
 | 4 / 3 / 1 | **mixed** (lead is only 1) |
 | 5 / 2 / 1 | **structured** (lead is 3) |
@@ -121,11 +121,10 @@ change the **college-fit headline only**—not the trait bars.
 | If the student picks… | Path headline becomes… |
 | --- | --- |
 | Wants a required degree, structured classes, or several years of school | `structured` |
-| Wants practical skills, a shorter program first, or work before more school | `applied` |
+| Wants practical skills, applied/hands-on learning, a shorter program first, or work before more school | `applied` |
 | Anything else | Keeps the scenario-based path (including `mixed`) |
 
-`entrepreneurial` can only come from scenario votes, not from these three
-questions.
+`flexible` can only come from scenario votes, not from these three questions.
 
 **Example:** Scenario votes say mixed, but the student picks “build practical
 skills” and “shorter program first” → report shows **applied**.

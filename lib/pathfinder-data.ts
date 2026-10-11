@@ -17,7 +17,7 @@ export const TRAIT_LABELS: Record<Trait, string> = {
   investigative: "Investigative",
 }
 
-export type PathSignal = "structured" | "applied" | "entrepreneurial"
+export type PathSignal = "structured" | "applied" | "flexible"
 
 export type Riasec = "R" | "I" | "A" | "S" | "E" | "C"
 export type ScenarioOption = {

@@ -41,24 +41,24 @@ export type Report = {
 
 const PATH_COPY: Record<PathSignal | "mixed", { title: string; summary: string }> = {
   structured: {
-    title: "A 4-year college is a strong fit",
+    title: "Explore a 4-year STEM degree at a Georgia public university.",
     summary:
-      "You tend to thrive with structured learning, clear goals, and deep study. A traditional degree path can give you the credentials and foundation your goals point toward.",
+      "Based on your answers, a structured bachelor's program in a STEM field at a Georgia public university may be worth exploring — especially if you want clear coursework and a degree path.",
   },
   applied: {
-    title: "A hands-on or 2-year path may suit you best",
+    title: "Consider a hands-on start with a 2-year transfer path",
     summary:
-      "You learn best by doing. Community colleges, associate degrees, and trade programs get you building real skills faster — often at a lower cost, with the option to transfer later.",
+      "You may prefer learning by doing first. Many students start at a Georgia technical or community college, build skills in a shorter program, then transfer toward a 4-year STEM degree at a public university.",
   },
-  entrepreneurial: {
-    title: "Keep college flexible and goal-driven",
+  flexible: {
+    title: "Explore a flexible, interdisciplinary STEM track in college",
     summary:
-      "You're driven, independent, and people-oriented. College can absolutely help, but choose it deliberately — for a specific goal, network, or skill — rather than by default.",
+      "Your answers suggest you might thrive combining design, leadership, and STEM coursework. Georgia public universities offer interdisciplinary majors, minors, and project-based paths within a college degree.",
   },
   mixed: {
-    title: "Your college-fit signals are mixed",
+    title: "Your college-fit signals are mixed — explore before you decide",
     summary:
-      "Your answers point in more than one direction. Explore programs and learning environments that combine structure, hands-on practice, and flexibility before deciding.",
+      "Your scenario answers point in more than one direction. You might sample structured classes, hands-on labs, and flexible project work at Georgia public colleges before choosing a longer STEM path.",
   },
 }
 
@@ -125,7 +125,7 @@ export function generateReport(
   const pathBreakdown: Record<PathSignal, number> = {
     structured: 0,
     applied: 0,
-    entrepreneurial: 0,
+    flexible: 0,
   }
 
   for (const scenario of SCENARIOS) {
@@ -177,6 +177,7 @@ export function generateReport(
     pathwayAnswers?.commitment === "several-years"
       ? "structured"
       : pathwayAnswers?.educationGoal === "practical-skills" ||
+          pathwayAnswers?.learningPreference === "applied" ||
           pathwayAnswers?.commitment === "shorter-first" ||
           pathwayAnswers?.commitment === "work-first"
         ? "applied"
