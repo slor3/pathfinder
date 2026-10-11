@@ -8,7 +8,19 @@ type Props = {
   onBack: () => void
 }
 
-const SOURCES = [
+type LinkedSource = {
+  title: string
+  body: string
+  href: string
+  label: string
+}
+
+type InstitutionSource = {
+  title: string
+  body: string
+}
+
+const LINKED_SOURCES: LinkedSource[] = [
   {
     title: "Holland Codes (RIASEC)",
     body: "Holland's six interest themes—Realistic, Investigative, Artistic, Social, Enterprising, and Conventional—provide a framework for describing interests in different kinds of work and learning.",
@@ -39,23 +51,20 @@ const SOURCES = [
     href: "https://www.onetonline.org/link/summary/15-1252.00",
     label: "Explore O*NET occupations",
   },
+]
+
+const INSTITUTION_SOURCES: InstitutionSource[] = [
   {
     title: "University of Georgia Bulletin",
     body: "The 2026–2027 undergraduate bulletin provides descriptions for biology, chemistry, physics, mathematics, statistics, data science, computer science, and discipline-specific engineering programs.",
-    href: "https://bulletin.uga.edu/Program/Index",
-    label: "Browse UGA programs",
   },
   {
     title: "Georgia Southern degree programs",
     body: "Georgia Southern's program listings describe undergraduate programs including biology, chemistry, physics, computer science, mathematical sciences, geosciences, and several engineering disciplines.",
-    href: "https://www.georgiasouthern.edu/degrees",
-    label: "Browse Georgia Southern programs",
   },
   {
     title: "Georgia State geosciences programs",
     body: "Georgia State describes its geosciences degree and environmental-geosciences and environmental-science concentrations. These provide related evidence for environmental pathways, not proof that all eight profiles are standalone degrees at each school.",
-    href: "https://geosciences.gsu.edu/",
-    label: "Explore Georgia State geosciences",
   },
 ]
 
@@ -157,7 +166,7 @@ export function ResearchScreen({ onBack }: Props) {
           Research sources
         </h2>
         <div className="mt-5 space-y-4">
-          {SOURCES.map((source) => (
+          {LINKED_SOURCES.map((source) => (
             <Card key={source.title} className="p-5">
               <h3 className="font-semibold">{source.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{source.body}</p>
@@ -172,6 +181,21 @@ export function ResearchScreen({ onBack }: Props) {
               </a>
             </Card>
           ))}
+          <Card className="p-5">
+            <h3 className="font-semibold">Georgia public university program catalogs</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Official undergraduate program descriptions from Georgia institutions informed the
+              provisional STEM major profiles.
+            </p>
+            <ul className="mt-4 space-y-4">
+              {INSTITUTION_SOURCES.map((source) => (
+                <li key={source.title}>
+                  <p className="font-medium">{source.title}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{source.body}</p>
+                </li>
+              ))}
+            </ul>
+          </Card>
         </div>
       </section>
 
