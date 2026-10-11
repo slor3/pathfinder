@@ -86,7 +86,7 @@ export function PathfinderApp() {
     setProfile(found.profile)
     setAnswers(found.answers)
     setPathwayAnswers(found.pathwayAnswers)
-    setReport(found.report)
+    setReport(generateReport(found.answers, found.pathwayAnswers))
     setSavedCurrent(true)
     setStage("report")
   }

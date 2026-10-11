@@ -48,9 +48,16 @@ function formatCompletionRate(rate: number | null): string {
   return `${Math.round(rate * 100)}%`
 }
 
+const PATH_VOTE_LABELS: Record<string, string> = {
+  structured: "4-year STEM exploration",
+  applied: "Hands-on / transfer path",
+  flexible: "Flexible STEM track",
+}
+
 export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome }: Props) {
   const [compare, setCompare] = useState<string[]>([])
   const [showStemDetails, setShowStemDetails] = useState(false)
+  const [showPathVotes, setShowPathVotes] = useState(false)
   const topMajors = report.majors.slice(0, 3)
 
   function toggleCompare(id: string) {
@@ -98,6 +105,51 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
             <p className="text-sm font-medium text-primary">Does college fit your goals?</p>
             <h2 className="mt-1 font-display text-xl font-semibold">{report.path.title}</h2>
             <p className="mt-2 leading-relaxed text-muted-foreground">{report.path.summary}</p>
+            <div className="mt-4 flex flex-wrap gap-2 text-sm">
+              <Badge variant="secondary" className="font-normal">
+                Structured {report.pathBreakdown.structured}
+              </Badge>
+              <Badge variant="secondary" className="font-normal">
+                Applied {report.pathBreakdown.applied}
+              </Badge>
+              <Badge variant="secondary" className="font-normal">
+                Flexible {report.pathBreakdown.flexible}
+              </Badge>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowPathVotes((open) => !open)}
+              className="mt-3 flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            >
+              {showPathVotes ? (
+                <ChevronUp className="size-4" aria-hidden />
+              ) : (
+                <ChevronDown className="size-4" aria-hidden />
+              )}
+              {showPathVotes ? "Hide how votes were counted" : "See how your answers counted"}
+            </button>
+            {showPathVotes && (
+              <ul className="mt-3 space-y-2 border-t border-border/60 pt-3 text-sm">
+                {(report.pathContributions ?? []).map((vote, index) => (
+                  <li key={`${vote.kind}-${index}`} className="leading-relaxed text-muted-foreground">
+                    <span className="font-medium text-foreground">
+                      +1 {PATH_VOTE_LABELS[vote.path]}
+                    </span>
+                    {vote.kind === "scenario" ? (
+                      <>
+                        {" "}
+                        — scenario: “{vote.optionLabel}” (RIASEC {vote.riasec})
+                      </>
+                    ) : (
+                      <>
+                        {" "}
+                        — pathway: “{vote.choiceLabel}”
+                      </>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </Card>

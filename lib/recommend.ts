@@ -8,6 +8,11 @@ import {
   type College,
 } from "./pathfinder-data"
 import { countStemFamilyOverlap } from "./cip-families"
+import {
+  resolveCollegePathKey,
+  tallyCollegePathVotes,
+  type PathVoteContribution,
+} from "./college-path"
 
 const TRAITS: Trait[] = ["analytical", "creative", "social", "handsOn", "leadership", "investigative"]
 
@@ -15,11 +20,10 @@ const DISPLAY_COLLEGE_LIMIT = 10
 const DISPLAY_MAJOR_LIMIT = 3
 
 export type Answers = Record<string, string> // scenarioId -> optionId
-export type PathwayAnswers = {
-  educationGoal: "degree-required" | "practical-skills" | "explore" | "unsure"
-  learningPreference: "structured" | "applied" | "mixed" | "unsure"
-  commitment: "several-years" | "shorter-first" | "work-first" | "unsure"
-}
+export type { PathwayAnswers } from "./college-path"
+import type { PathwayAnswers } from "./college-path"
+
+export type { PathVoteContribution } from "./college-path"
 
 export type MajorMatch = { major: Major; score: number }
 export type CollegeMatch = { college: College; score: number }
@@ -36,6 +40,7 @@ export type Report = {
   majors: MajorMatch[]
   path: PathRecommendation
   pathBreakdown: Record<PathSignal, number>
+  pathContributions: PathVoteContribution[]
   colleges: CollegeMatch[]
 }
 
@@ -122,12 +127,6 @@ export function generateReport(
     leadership: 0,
     investigative: 0,
   }
-  const pathBreakdown: Record<PathSignal, number> = {
-    structured: 0,
-    applied: 0,
-    flexible: 0,
-  }
-
   for (const scenario of SCENARIOS) {
     const chosenId = answers[scenario.id]
     const option = scenario.options.find((o) => o.id === chosenId)
@@ -135,18 +134,10 @@ export function generateReport(
     for (const [trait, value] of Object.entries(option.traits)) {
       raw[trait as Trait] += value as number
     }
-    pathBreakdown[option.path] += 1
   }
 
-  if (pathwayAnswers) {
-    if (pathwayAnswers.educationGoal === "degree-required") pathBreakdown.structured += 1
-    if (pathwayAnswers.learningPreference === "structured") pathBreakdown.structured += 1
-    if (pathwayAnswers.commitment === "several-years") pathBreakdown.structured += 1
-    if (pathwayAnswers.educationGoal === "practical-skills") pathBreakdown.applied += 1
-    if (pathwayAnswers.learningPreference === "applied") pathBreakdown.applied += 1
-    if (pathwayAnswers.commitment === "shorter-first") pathBreakdown.applied += 1
-    if (pathwayAnswers.commitment === "work-first") pathBreakdown.applied += 1
-  }
+  const { breakdown: pathBreakdown, contributions: pathContributions } =
+    tallyCollegePathVotes(answers, pathwayAnswers)
 
   // 2. Normalize traits to 0-100.
   const max = Math.max(1, ...TRAITS.map((t) => raw[t]))
@@ -172,15 +163,8 @@ export function generateReport(
     .sort((a, b) => b.score - a.score)
     .slice(0, DISPLAY_MAJOR_LIMIT)
 
-  // 4. Determine the recommended path.
-  const rankedPaths = (Object.keys(pathBreakdown) as PathSignal[]).sort(
-    (a, b) => pathBreakdown[b] - pathBreakdown[a],
-  )
-  const leadingPath = rankedPaths[0]
-  const pathKey: PathSignal | "mixed" =
-    pathBreakdown[leadingPath] - pathBreakdown[rankedPaths[1]] >= 2
-      ? leadingPath
-      : "mixed"
+  // 4. Determine the recommended path from combined scenario + pathway votes.
+  const pathKey = resolveCollegePathKey(pathBreakdown)
 
   // 5. Rank Georgia public colleges by STEM CIP overlap, completion rate, and in-state tuition.
   const collegeMatches = rankColleges(majorMatches)
@@ -191,6 +175,7 @@ export function generateReport(
     majors: majorMatches,
     path: { key: pathKey, ...PATH_COPY[pathKey] },
     pathBreakdown,
+    pathContributions,
     colleges: collegeMatches,
   }
 }

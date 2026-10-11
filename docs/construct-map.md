@@ -14,7 +14,7 @@ lives on the research screen (`components/research-screen.tsx`).
 8 scenario answers
   → six trait scores (strength bars)
   → college-fit path (or “mixed”)
-  → 3 education-preference answers may override the path headline
+  → 3 education-preference answers add path votes (combined tally)
 
 trait scores + major-area profiles → top STEM major suggestions
 top majors + college data → ranked Georgia public colleges
@@ -23,7 +23,7 @@ top majors + college data → ranked Georgia public colleges
 | Report section | What drives it |
 | --- | --- |
 | Strength bars | Trait weights on the 8 scenario answers you chose |
-| College-fit headline | Path votes + education-preference override |
+| College-fit headline | Path votes from scenarios + pathway questions ([detail](./college-fit-headline.md)) |
 | Suggested majors | How your traits match eight STEM area profiles |
 | Recommended colleges | STEM program overlap, completion rate, in-state tuition |
 

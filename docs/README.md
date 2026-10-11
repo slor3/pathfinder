@@ -9,6 +9,7 @@ starting points for conversation, not final answers.
 | If you want to… | Read |
 | --- | --- |
 | Understand what the app does and how scoring works | [How scoring works](./construct-map.md) |
+| Trace how answers become the college-fit headline | [College-fit headline](./college-fit-headline.md) |
 | See how we chose the eight STEM major profiles | [STEM major profiles](./scorecard-stem-mapping.md) |
 | Run or change the code | [Project README](../README.md) |
 
@@ -46,6 +47,7 @@ starting points for conversation, not final answers.
 | Major profiles and trait labels | `lib/pathfinder-data.ts` |
 | Georgia college dataset | `lib/ga-colleges.json` |
 | Scoring logic | `lib/recommend.ts` |
+| College-fit path votes and rules | `lib/college-path.ts` |
 
 ## Research sources
 

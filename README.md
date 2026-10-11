@@ -59,6 +59,7 @@ No `.env` is required for the current prototype. Copy `.env.example` to `.env.lo
 | `components/` | Landing, profile, quiz, and report screens |
 | `docs/README.md` | Documentation index and glossary (start here) |
 | `docs/construct-map.md` | How quiz answers become the report |
+| `docs/college-fit-headline.md` | How answers build the college-fit headline |
 | `docs/scorecard-stem-mapping.md` | Eight STEM major profiles and research sources |
 | `lib/stem-scenarios.ts` | 16 STEM quiz scenarios and per-option weights |
 | `lib/pathfinder-data.ts` | Major profiles, trait labels, types |
