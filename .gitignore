@@ -11,6 +11,11 @@ __v0_jsx-dev-runtime.ts
 .env.*
 !.env.example
 
+# Firebase CLI cache and service account keys
+.firebase/
+firebase-debug.log
+*-firebase-adminsdk-*.json
+
 # Dependencies and build
 node_modules/
 .next/
