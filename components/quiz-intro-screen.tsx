@@ -10,6 +10,7 @@ type Props = {
 
 type IntroStep = {
   title: string
+  sentence: string
   color: string
   onColor: string
   iconColor: string
@@ -19,6 +20,7 @@ type IntroStep = {
 const STEPS: IntroStep[] = [
   {
     title: "Quiz answers",
+    sentence: "You answer short scenarios about how you would start.",
     color: "oklch(0.46 0.1 185)",
     onColor: "oklch(0.99 0.01 190)",
     iconColor: "light-dark(oklch(0.40 0.09 185), oklch(0.82 0.08 185))",
@@ -26,6 +28,7 @@ const STEPS: IntroStep[] = [
   },
   {
     title: "Strength areas",
+    sentence: "Your answers add up into strength areas.",
     color: "oklch(0.84 0.12 78)",
     onColor: "oklch(0.28 0.05 55)",
     iconColor: "light-dark(oklch(0.48 0.11 65), oklch(0.88 0.12 82))",
@@ -33,6 +36,7 @@ const STEPS: IntroStep[] = [
   },
   {
     title: "Matching STEM majors",
+    sentence: "Those strengths are matched to STEM majors.",
     color: "oklch(0.45 0.12 235)",
     onColor: "oklch(0.99 0.005 235)",
     iconColor: "light-dark(oklch(0.42 0.12 240), oklch(0.82 0.08 235))",
@@ -40,6 +44,7 @@ const STEPS: IntroStep[] = [
   },
   {
     title: "Career ideas and Georgia colleges",
+    sentence: "You see career ideas and Georgia colleges for those majors.",
     color: "oklch(0.44 0.11 150)",
     onColor: "oklch(0.99 0.01 150)",
     iconColor: "light-dark(oklch(0.40 0.11 150), oklch(0.84 0.1 150))",
@@ -51,8 +56,16 @@ const STEP_STAGGER_MS = 750
 
 export function QuizIntroScreen({ onContinue, onBack }: Props) {
   return (
-    <section className="mx-auto max-w-2xl px-4 py-8 md:py-14" aria-label="How PathFinder works">
-      <div className="quiz-intro">
+    <section className="mx-auto max-w-2xl px-4 py-8 md:py-14" aria-labelledby="quiz-intro-heading">
+      <p className="text-sm font-medium text-primary">Before question 1</p>
+      <h1
+        id="quiz-intro-heading"
+        className="mt-2 text-balance font-display text-3xl font-semibold tracking-tight md:text-4xl"
+      >
+        How PathFinder works
+      </h1>
+
+      <div className="quiz-intro mt-8">
         <ol className="m-0 list-none p-0">
           {STEPS.map((step, index) => {
             const Icon = step.icon
@@ -82,17 +95,18 @@ export function QuizIntroScreen({ onContinue, onBack }: Props) {
                     {index + 1}
                   </span>
                   <div
-                    className="quiz-intro-step flex min-w-0 flex-1 items-center rounded-2xl border p-4"
+                    className="quiz-intro-step min-w-0 flex-1 rounded-2xl border p-4"
                     style={{
                       animationDelay: `${delay + 90}ms`,
                       borderColor: `color-mix(in oklch, ${step.color} 48%, var(--border))`,
                       backgroundColor: `color-mix(in oklch, ${step.color} 16%, var(--card))`,
                     }}
                   >
-                    <p className="flex items-center gap-2 font-display text-lg font-semibold leading-tight">
+                    <h2 className="flex items-center gap-2 font-display text-lg font-semibold leading-tight">
                       <Icon className="size-5 shrink-0" style={{ color: step.iconColor }} aria-hidden />
                       {step.title}
-                    </p>
+                    </h2>
+                    <p className="mt-1.5 text-[15px] leading-relaxed text-foreground">{step.sentence}</p>
                   </div>
                 </div>
               </li>

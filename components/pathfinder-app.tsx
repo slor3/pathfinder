@@ -25,7 +25,6 @@ import {
 } from "@/lib/storage"
 
 type Stage = "landing" | "research" | "profile" | "intro" | "quiz" | "report" | "signup" | "login"
-type ResearchFrom = Exclude<Stage, "research">
 
 export function PathfinderApp() {
   const [stage, setStage] = useState<Stage>("landing")
