@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card"
 
 type Props = {
   onBack: () => void
+  backLabel?: string
 }
 
 type LinkedSource = {
@@ -68,12 +69,15 @@ const INSTITUTION_SOURCES: InstitutionSource[] = [
   },
 ]
 
-export function ResearchScreen({ onBack }: Props) {
+export function ResearchScreen({ onBack, backLabel }: Props) {
+  const topLabel = backLabel ?? "Back to home"
+  const bottomLabel = backLabel ?? "Return to home"
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 md:py-16">
       <Button variant="ghost" className="mb-8 gap-2" onClick={onBack}>
         <ArrowLeft className="size-4" aria-hidden />
-        Back to home
+        {topLabel}
       </Button>
 
       <div className="max-w-3xl">
@@ -232,7 +236,7 @@ export function ResearchScreen({ onBack }: Props) {
       <div className="mt-10">
         <Button onClick={onBack} variant="outline" className="gap-2">
           <ArrowLeft className="size-4" aria-hidden />
-          Return to home
+          {bottomLabel}
         </Button>
       </div>
     </div>
