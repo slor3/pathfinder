@@ -154,15 +154,27 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
                   {i === 0 && <Badge className="shrink-0">Top match</Badge>}
                 </div>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{m.major.blurb}</p>
-                <div className="mt-2 flex flex-wrap gap-1.5">
+                <div className="mt-3">
+                  <p className="text-sm font-medium">Careers to explore</p>
+                  <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+                    {m.major.careers.map((career, careerIndex) => (
+                      <li key={`${m.major.id}-${career.title}-${careerIndex}`}>
+                        <a
+                          href={career.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-primary underline-offset-4 hover:underline"
+                        >
+                          {career.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-1.5">
                   <Badge variant="secondary" className="font-normal">
                     {CLUSTER_LABELS[m.major.cluster]}
                   </Badge>
-                  {m.major.careers.slice(0, 2).map((c) => (
-                    <Badge key={c} variant="outline" className="font-normal text-muted-foreground">
-                      {c}
-                    </Badge>
-                  ))}
                 </div>
               </li>
             ))}
