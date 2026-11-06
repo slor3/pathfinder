@@ -157,8 +157,8 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
                 <div className="mt-3">
                   <p className="text-sm font-medium">Careers to explore</p>
                   <ul className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
-                    {m.major.careers.map((career) => (
-                      <li key={career.url}>
+                    {m.major.careers.map((career, careerIndex) => (
+                      <li key={`${m.major.id}-${career.title}-${careerIndex}`}>
                         <a
                           href={career.url}
                           target="_blank"
