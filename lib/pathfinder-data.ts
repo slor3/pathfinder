@@ -54,12 +54,17 @@ export function getRandomizedQuizQuestions(): Scenario[] {
 /** All report majors are STEM areas (Sprint 2 scope). */
 export type Cluster = "stem"
 
+export type Career = {
+  title: string
+  url: string
+}
+
 export type Major = {
   id: string
   name: string
   cluster: Cluster
   blurb: string
-  careers: string[]
+  careers: Career[]
   profile: Partial<Record<Trait, number>>
 }
 
@@ -69,7 +74,11 @@ export const MAJORS: Major[] = [
     name: "Biology",
     cluster: "stem",
     blurb: "Study living systems, organisms, and biological processes through observation, experiments, and data analysis.",
-    careers: ["Biologist", "Laboratory Analyst", "Biomedical Researcher"],
+    careers: [
+      { title: "Biological Technicians", url: "https://www.onetonline.org/link/summary/19-4021.00" },
+      { title: "Agricultural Technicians", url: "https://www.onetonline.org/link/summary/19-4012.00" },
+      { title: "Zoologists and Wildlife Biologists", url: "https://www.onetonline.org/link/summary/19-1023.00" },
+    ],
     profile: { investigative: 3, analytical: 3, handsOn: 2, creative: 1 },
   },
   {
@@ -77,7 +86,11 @@ export const MAJORS: Major[] = [
     name: "Chemistry",
     cluster: "stem",
     blurb: "Investigate matter, reactions, and materials using experiments, testing, and analytical reasoning.",
-    careers: ["Chemist", "Materials Scientist", "Quality Analyst"],
+    careers: [
+      { title: "Chemists", url: "https://www.onetonline.org/link/summary/19-2031.00" },
+      { title: "Chemical Technicians", url: "https://www.onetonline.org/link/summary/19-4031.00" },
+      { title: "Chemical Engineers", url: "https://www.onetonline.org/link/summary/17-2041.00" },
+    ],
     profile: { investigative: 3, analytical: 3, handsOn: 2, creative: 2 },
   },
   {
@@ -85,7 +98,11 @@ export const MAJORS: Major[] = [
     name: "Physics",
     cluster: "stem",
     blurb: "Examine physical laws, energy, systems, and motion through mathematical reasoning and experimentation.",
-    careers: ["Physicist", "Research Scientist", "Lab Analyst"],
+    careers: [
+      { title: "Occupational Health and Safety Specialists", url: "https://www.onetonline.org/link/summary/19-5011.00" },
+      { title: "Physical Therapist Assistants", url: "https://www.onetonline.org/link/summary/31-2021.00" },
+      { title: "Career/Technical Education Teachers, Middle School", url: "https://www.onetonline.org/link/summary/25-2023.00" },
+    ],
     profile: { investigative: 3, analytical: 3, handsOn: 1, creative: 2 },
   },
   {
@@ -93,7 +110,11 @@ export const MAJORS: Major[] = [
     name: "Environmental Science",
     cluster: "stem",
     blurb: "Study environmental and Earth systems through field observation, scientific analysis, and applied problem-solving.",
-    careers: ["Environmental Scientist", "Conservation Specialist", "Sustainability Analyst"],
+    careers: [
+      { title: "Environmental Scientists and Specialists, Including Health", url: "https://www.onetonline.org/link/summary/19-2041.00" },
+      { title: "Conservation Scientists", url: "https://www.onetonline.org/link/summary/19-1031.00" },
+      { title: "Geoscientists, Except Hydrologists and Geographers", url: "https://www.onetonline.org/link/summary/19-2042.00" },
+    ],
     profile: { investigative: 3, analytical: 2, handsOn: 3, social: 2, creative: 1 },
   },
   {
@@ -101,7 +122,11 @@ export const MAJORS: Major[] = [
     name: "Mathematics",
     cluster: "stem",
     blurb: "Use quantitative reasoning and abstract modeling to solve problems in science, technology, and decision-making.",
-    careers: ["Mathematician", "Operations Analyst", "Modeling Specialist"],
+    careers: [
+      { title: "Elementary School Teachers, Except Special Education", url: "https://www.onetonline.org/link/summary/25-2021.00" },
+      { title: "Statisticians", url: "https://www.onetonline.org/link/summary/15-2041.00" },
+      { title: "Operations Research Analysts", url: "https://www.onetonline.org/link/summary/15-2031.00" },
+    ],
     profile: { analytical: 3, investigative: 2, creative: 3, social: 1 },
   },
   {
@@ -109,7 +134,11 @@ export const MAJORS: Major[] = [
     name: "Statistics / Data Science",
     cluster: "stem",
     blurb: "Analyze patterns, interpret data, and build models that support insight and prediction across many fields.",
-    careers: ["Data Analyst", "Statistician", "Data Scientist"],
+    careers: [
+      { title: "Data Scientists", url: "https://www.onetonline.org/link/summary/15-2051.00" },
+      { title: "Actuaries", url: "https://www.onetonline.org/link/summary/15-2011.00" },
+      { title: "Biostatisticians", url: "https://www.onetonline.org/link/summary/15-2041.01" },
+    ],
     profile: { analytical: 3, investigative: 3, creative: 2, social: 2, handsOn: 1 },
   },
   {
@@ -117,7 +146,11 @@ export const MAJORS: Major[] = [
     name: "Computer Science",
     cluster: "stem",
     blurb: "Design software, systems, and computational tools to solve complex problems.",
-    careers: ["Software Developer", "Data Analyst", "Systems Engineer"],
+    careers: [
+      { title: "Software Developers", url: "https://www.onetonline.org/link/summary/15-1252.00" },
+      { title: "Computer Network Architects", url: "https://www.onetonline.org/link/summary/15-1241.00" },
+      { title: "Information Security Analysts", url: "https://www.onetonline.org/link/summary/15-1212.00" },
+    ],
     profile: { analytical: 3, investigative: 2, creative: 3, social: 1, handsOn: 1 },
   },
   {
@@ -125,7 +158,11 @@ export const MAJORS: Major[] = [
     name: "Engineering",
     cluster: "stem",
     blurb: "Design, test, and improve structures, machines, materials, and technical systems.",
-    careers: ["Civil Engineer", "Electrical Engineer", "Mechanical Engineer"],
+    careers: [
+      { title: "Civil Engineers", url: "https://www.onetonline.org/link/summary/17-2051.00" },
+      { title: "Mechanical Engineers", url: "https://www.onetonline.org/link/summary/17-2141.00" },
+      { title: "Electrical Engineers", url: "https://www.onetonline.org/link/summary/17-2071.00" },
+    ],
     profile: { analytical: 2, handsOn: 3, investigative: 2, creative: 3, social: 1, leadership: 1 },
   },
 ]
