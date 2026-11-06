@@ -29,7 +29,6 @@ type ResearchFrom = Exclude<Stage, "research">
 
 export function PathfinderApp() {
   const [stage, setStage] = useState<Stage>("landing")
-  const [researchReturn, setResearchReturn] = useState<ResearchFrom>("landing")
   const [profile, setProfile] = useState<Profile | null>(null)
   const [answers, setAnswers] = useState<Answers>({})
   const [pathwayAnswers, setPathwayAnswers] = useState<PathwayAnswers | undefined>()
@@ -54,11 +53,6 @@ export function PathfinderApp() {
 
   function startFlow() {
     setStage("profile")
-  }
-
-  function openResearch(from: ResearchFrom) {
-    setResearchReturn(from)
-    setStage("research")
   }
 
   function handleProfile(p: Profile) {
@@ -191,18 +185,13 @@ export function PathfinderApp() {
         {stage === "landing" && (
           <LandingScreen
             onStart={startFlow}
-            onResearch={() => openResearch("landing")}
+            onResearch={() => setStage("research")}
             savedReports={savedReports}
             onViewSaved={viewSaved}
             onDeleteSaved={handleDeleteSaved}
           />
         )}
-        {stage === "research" && (
-          <ResearchScreen
-            onBack={() => setStage(researchReturn)}
-            backLabel={researchReturn === "intro" ? "Back to intro" : undefined}
-          />
-        )}
+        {stage === "research" && <ResearchScreen onBack={() => setStage("landing")} />}
         {stage === "signup" && (
           <SignUpScreen
             signedInEmail={user?.email ?? null}
@@ -234,11 +223,7 @@ export function PathfinderApp() {
           </div>
         )}
         {stage === "intro" && (
-          <QuizIntroScreen
-            onContinue={() => setStage("quiz")}
-            onBack={() => setStage("profile")}
-            onResearch={() => openResearch("intro")}
-          />
+          <QuizIntroScreen onContinue={() => setStage("quiz")} onBack={() => setStage("profile")} />
         )}
         {(stage === "quiz" ||
           (accountReturn === "quiz" && (stage === "login" || stage === "signup"))) && (

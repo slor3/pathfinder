@@ -196,13 +196,6 @@
   animation: quiz-intro-draw-y 0.32s ease forwards;
 }
 
-.quiz-intro[data-motion="off"] .quiz-intro-step,
-.quiz-intro[data-motion="off"] .quiz-intro-line-y {
-  opacity: 1;
-  transform: none;
-  animation: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .quiz-intro .quiz-intro-step,
   .quiz-intro .quiz-intro-line-y {
