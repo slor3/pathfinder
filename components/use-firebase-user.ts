@@ -15,3 +15,27 @@ export function useFirebaseUser() {
 
   return user
 }
+
+/**
+ * Email to show the moment sign-up or log in succeeds.
+ * When Firebase later reports a signed-out session, that local email is dropped
+ * so the form comes back — including sign out from the header.
+ */
+export function useAccountEmail(signedInEmail: string | null) {
+  const [localEmail, setLocalEmail] = useState<string | null>(null)
+  const [trackedEmail, setTrackedEmail] = useState(signedInEmail)
+
+  if (trackedEmail !== signedInEmail) {
+    setTrackedEmail(signedInEmail)
+    if (!signedInEmail) setLocalEmail(null)
+  }
+
+  const signedOut = trackedEmail !== null && signedInEmail === null
+  const email = signedOut ? null : (localEmail ?? signedInEmail)
+
+  return {
+    email,
+    rememberedHere: !signedOut && localEmail !== null,
+    rememberEmail: setLocalEmail,
+  }
+}

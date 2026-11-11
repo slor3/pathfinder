@@ -4,12 +4,14 @@ import { useEffect, useMemo, useState } from "react"
 import { Compass } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LandingScreen } from "./landing-screen"
+import { LoginScreen } from "./login-screen"
 import { ProfileScreen } from "./profile-screen"
 import { QuizScreen } from "./quiz-screen"
 import { ReportScreen } from "./report-screen"
 import { ResearchScreen } from "./research-screen"
 import { SignUpScreen } from "./sign-up-screen"
 import { useFirebaseUser } from "./use-firebase-user"
+import { signOutCurrentUser, signOutErrorMessage } from "@/lib/firebase"
 import { generateReport, type Answers, type PathwayAnswers, type Report } from "@/lib/recommend"
 import {
   loadProfile,
@@ -20,7 +22,7 @@ import {
   type SavedReport,
 } from "@/lib/storage"
 
-type Stage = "landing" | "research" | "profile" | "quiz" | "report" | "signup"
+type Stage = "landing" | "research" | "profile" | "quiz" | "report" | "signup" | "login"
 
 export function PathfinderApp() {
   const [stage, setStage] = useState<Stage>("landing")
@@ -30,6 +32,8 @@ export function PathfinderApp() {
   const [report, setReport] = useState<Report | null>(null)
   const [savedReports, setSavedReports] = useState<SavedReport[]>([])
   const [savedCurrent, setSavedCurrent] = useState(false)
+  const [signingOut, setSigningOut] = useState(false)
+  const [signOutError, setSignOutError] = useState<string | null>(null)
   const user = useFirebaseUser()
 
   // Hydrate persisted state after mount — localStorage is not available during SSR.
@@ -84,6 +88,18 @@ export function PathfinderApp() {
     setStage("quiz")
   }
 
+  function handleSignOut() {
+    setSignOutError(null)
+    setSigningOut(true)
+    void signOutCurrentUser()
+      .catch((error: unknown) => {
+        setSignOutError(signOutErrorMessage(error))
+      })
+      .finally(() => {
+        setSigningOut(false)
+      })
+  }
+
   function viewSaved(id: string) {
     const found = savedReports.find((r) => r.id === id)
     if (!found) return
@@ -108,20 +124,30 @@ export function PathfinderApp() {
             </span>
             PathFinder
           </button>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
             {user?.email ? (
-              <button
-                type="button"
-                onClick={() => setStage("signup")}
-                className="max-w-[9rem] truncate text-sm text-muted-foreground hover:text-foreground sm:max-w-xs"
-                title={user.email}
-              >
-                {user.email}
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => setStage("login")}
+                  className="max-w-[9rem] truncate text-sm text-muted-foreground hover:text-foreground sm:max-w-xs"
+                  title={user.email}
+                >
+                  {user.email}
+                </button>
+                <Button variant="outline" onClick={handleSignOut} disabled={signingOut}>
+                  {signingOut ? "Signing out…" : "Sign out"}
+                </Button>
+              </>
             ) : (
-              <Button variant="outline" onClick={() => setStage("signup")}>
-                Create account
-              </Button>
+              <>
+                <Button variant="ghost" onClick={() => setStage("login")}>
+                  Log in
+                </Button>
+                <Button variant="outline" onClick={() => setStage("signup")}>
+                  Create account
+                </Button>
+              </>
             )}
             {savedReports.length > 0 && (
               <span className="text-sm text-muted-foreground">
@@ -130,6 +156,11 @@ export function PathfinderApp() {
             )}
           </div>
         </div>
+        {signOutError && (
+          <p className="mx-auto max-w-5xl px-4 pb-3 text-sm text-destructive" role="alert">
+            {signOutError}
+          </p>
+        )}
       </header>
 
       <main>
@@ -147,6 +178,19 @@ export function PathfinderApp() {
             signedInEmail={user?.email ?? null}
             onBack={() => setStage("landing")}
             onStartQuiz={startFlow}
+            onLogIn={() => setStage("login")}
+            onSignOut={handleSignOut}
+            signingOut={signingOut}
+          />
+        )}
+        {stage === "login" && (
+          <LoginScreen
+            signedInEmail={user?.email ?? null}
+            onBack={() => setStage("landing")}
+            onStartQuiz={startFlow}
+            onCreateAccount={() => setStage("signup")}
+            onSignOut={handleSignOut}
+            signingOut={signingOut}
           />
         )}
         {stage === "profile" && (

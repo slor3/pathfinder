@@ -1,11 +1,12 @@
 "use client"
 
 import { useState, type FormEvent } from "react"
-import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { AccountSignedIn } from "./account-signed-in"
+import { useAccountEmail } from "./use-firebase-user"
 import {
   createEmailAccount,
   isFirebaseConfigured,
@@ -18,9 +19,19 @@ type Props = {
   signedInEmail: string | null
   onBack: () => void
   onStartQuiz: () => void
+  onLogIn: () => void
+  onSignOut: () => void
+  signingOut: boolean
 }
 
-export function SignUpScreen({ signedInEmail, onBack, onStartQuiz }: Props) {
+export function SignUpScreen({
+  signedInEmail,
+  onBack,
+  onStartQuiz,
+  onLogIn,
+  onSignOut,
+  signingOut,
+}: Props) {
   const configured = isFirebaseConfigured()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -28,30 +39,18 @@ export function SignUpScreen({ signedInEmail, onBack, onStartQuiz }: Props) {
   const [fieldErrors, setFieldErrors] = useState<SignUpFieldErrors>({})
   const [formError, setFormError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
-  const [createdEmail, setCreatedEmail] = useState<string | null>(null)
-
-  const activeEmail = createdEmail ?? signedInEmail
+  const { email: activeEmail, rememberedHere, rememberEmail } = useAccountEmail(signedInEmail)
 
   if (activeEmail) {
     return (
-      <div className="mx-auto flex min-h-[70vh] max-w-lg flex-col justify-center px-4 py-12">
-        <p className="mb-2 text-sm font-medium text-primary">Account</p>
-        <h1 className="font-display text-3xl font-semibold tracking-tight">
-          {createdEmail ? "Account created" : "You\u2019re signed in"}
-        </h1>
-        <p className="mt-2 text-muted-foreground">
-          Signed in as {activeEmail}. You can take the quiz now. An account is not required.
-        </p>
-        <div className="mt-6 flex items-center justify-between">
-          <Button variant="ghost" onClick={onBack}>
-            Back
-          </Button>
-          <Button className="gap-2" onClick={onStartQuiz}>
-            Start the quiz
-            <ArrowRight className="size-4" aria-hidden />
-          </Button>
-        </div>
-      </div>
+      <AccountSignedIn
+        email={activeEmail}
+        title={rememberedHere ? "Account created" : "You\u2019re signed in"}
+        onBack={onBack}
+        onStartQuiz={onStartQuiz}
+        onSignOut={onSignOut}
+        signingOut={signingOut}
+      />
     )
   }
 
@@ -71,7 +70,7 @@ export function SignUpScreen({ signedInEmail, onBack, onStartQuiz }: Props) {
     setSubmitting(true)
     try {
       const credential = await createEmailAccount(email, password)
-      setCreatedEmail(credential.user.email ?? email.trim())
+      rememberEmail(credential.user.email ?? email.trim())
     } catch (error) {
       setFormError(signUpErrorMessage(error))
     } finally {
@@ -172,6 +171,17 @@ export function SignUpScreen({ signedInEmail, onBack, onStartQuiz }: Props) {
             {submitting ? "Creating account…" : "Create account"}
           </Button>
         </div>
+        <p className="mt-4 text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <button
+            type="button"
+            className="font-medium text-primary underline-offset-4 hover:underline disabled:opacity-50"
+            onClick={onLogIn}
+            disabled={submitting}
+          >
+            Log in
+          </button>
+        </p>
       </form>
     </div>
   )

@@ -22,7 +22,7 @@ works and how the STEM major profiles were built.
 - ESLint (`eslint-config-next`) plus GitHub Actions CI on every pull request
 - UI started in [v0](https://v0.app); scoring lives in `lib/recommend.ts` and `lib/pathfinder-data.ts`
 - Quiz and on-this-device reports: browser `localStorage`
-- Optional accounts: Firebase Authentication (email and password) after web config is in `.env.local`
+- Optional accounts: Firebase Authentication (email and password sign-up, log in, and sign out) after web config is in `.env.local`
 - Work tracking: Jira project **PathFinder (`PAT`)** on [alensuvalic.atlassian.net](https://alensuvalic.atlassian.net/jira/software/projects/PAT/board)
 
 ## Run locally
@@ -42,16 +42,19 @@ pnpm build
 pnpm start
 ```
 
-The quiz runs with no `.env` file. Email sign-up needs Firebase web config: copy `.env.example` to `.env.local`, paste the keys, and restart the dev server. Do not commit `.env.local` or a service account JSON file.
+The quiz runs with no `.env` file. Email sign-up, log in, and sign out need Firebase web config: copy `.env.example` to `.env.local`, paste the keys, and restart the dev server. Do not commit `.env.local` or a service account JSON file.
 
-### Email sign-up
+### Email accounts
 
 1. In the [Firebase console](https://console.firebase.google.com/), create or open a project, add a web app, and turn on the Email/Password sign-in provider.
 2. Copy `.env.example` to `.env.local`.
 3. Paste `apiKey`, `authDomain`, `projectId`, `storageBucket`, `messagingSenderId`, and `appId` into the matching `NEXT_PUBLIC_FIREBASE_*` variables.
 4. Restart `pnpm dev`.
+5. Choose **Create account** to register, **Log in** to open an existing account, and **Sign out** in the header when you are done.
 
-`localhost` is an authorized domain by default. For the deployed site, add `pathfinder-iota-mauve.vercel.app` under Authentication → Settings → Authorized domains. Do not include `https://` or a port. The same six variables belong in the Vercel project if sign-up should work there. `measurementId` is not used.
+A wrong password, or an email with no account, stays on the log-in form and shows an error. The quiz still runs after sign out, and with no account at all.
+
+`localhost` is an authorized domain by default. For the deployed site, add `pathfinder-iota-mauve.vercel.app` under Authentication → Settings → Authorized domains. Do not include `https://` or a port. The same six variables belong in the Vercel project if accounts should work there. `measurementId` is not used.
 
 ## How we work
 
@@ -66,7 +69,7 @@ The quiz runs with no `.env` file. Email sign-up needs Firebase web config: copy
 | Path | Role |
 | --- | --- |
 | `app/` | Next.js app shell |
-| `components/` | Landing, profile, quiz, report, and sign-up screens |
+| `components/` | Landing, profile, quiz, report, sign-up, and log-in screens |
 | `docs/README.md` | Documentation index and glossary (start here) |
 | `docs/construct-map.md` | How quiz answers become the report |
 | `docs/scorecard-stem-mapping.md` | Eight STEM major profiles and research sources |
@@ -75,5 +78,5 @@ The quiz runs with no `.env` file. Email sign-up needs Firebase web config: copy
 | `lib/ga-colleges.json` | Cached Georgia public college dataset |
 | `lib/recommend.ts` | Scoring and ranking |
 | `lib/storage.ts` | Saved reports in `localStorage` |
-| `lib/firebase.ts` | Firebase web app init and email sign-up |
+| `lib/firebase.ts` | Firebase web app init, email sign-up, log in, and sign out |
 | `firebase.json` | Email/password provider config for `firebase deploy --only auth` |
