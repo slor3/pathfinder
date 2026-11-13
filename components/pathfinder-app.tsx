@@ -14,6 +14,7 @@ import { useFirebaseUser } from "./use-firebase-user"
 import { signOutCurrentUser, signOutErrorMessage } from "@/lib/firebase"
 import { generateReport, type Answers, type PathwayAnswers, type Report } from "@/lib/recommend"
 import {
+  deleteReport,
   loadProfile,
   loadSavedReports,
   saveProfile,
@@ -122,6 +123,10 @@ export function PathfinderApp() {
     setStage("report")
   }
 
+  function handleDeleteSaved(id: string) {
+    setSavedReports(deleteReport(id))
+  }
+
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-border/70 bg-background/80 backdrop-blur">
@@ -181,6 +186,7 @@ export function PathfinderApp() {
             onResearch={() => setStage("research")}
             savedReports={savedReports}
             onViewSaved={viewSaved}
+            onDeleteSaved={handleDeleteSaved}
           />
         )}
         {stage === "research" && <ResearchScreen onBack={() => setStage("landing")} />}

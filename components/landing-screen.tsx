@@ -1,8 +1,18 @@
 "use client"
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { ArrowRight, BookOpen, Compass, GraduationCap, MapPin, Sparkles, Target } from "lucide-react"
+import {
+  ArrowRight,
+  BookOpen,
+  Compass,
+  GraduationCap,
+  MapPin,
+  Sparkles,
+  Target,
+  Trash2,
+} from "lucide-react"
 import type { SavedReport } from "@/lib/storage"
 
 type Props = {
@@ -10,6 +20,15 @@ type Props = {
   onResearch: () => void
   savedReports: SavedReport[]
   onViewSaved: (id: string) => void
+  onDeleteSaved: (id: string) => void
+}
+
+function formatSavedDate(createdAt: number): string {
+  return new Date(createdAt).toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  })
 }
 
 const STEPS = [
@@ -30,7 +49,20 @@ const STEPS = [
   },
 ]
 
-export function LandingScreen({ onStart, onResearch, savedReports, onViewSaved }: Props) {
+export function LandingScreen({
+  onStart,
+  onResearch,
+  savedReports,
+  onViewSaved,
+  onDeleteSaved,
+}: Props) {
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+
+  function confirmDelete(id: string) {
+    onDeleteSaved(id)
+    setPendingDeleteId((current) => (current === id ? null : current))
+  }
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 md:py-20">
       <div className="grid items-center gap-10 md:grid-cols-[1.1fr_0.9fr]">
@@ -92,25 +124,69 @@ export function LandingScreen({ onStart, onResearch, savedReports, onViewSaved }
         <div className="mt-14">
           <h2 className="mb-4 font-display text-xl font-semibold">Your saved reports</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {savedReports.map((r) => (
-              <button
-                key={r.id}
-                onClick={() => onViewSaved(r.id)}
-                className="group rounded-xl border border-border bg-card p-4 text-left transition-colors hover:border-primary/50 hover:bg-secondary/50"
-              >
-                <p className="font-medium">{r.profile.name || "Anonymous"}</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Top match: {r.report.majors[0]?.major.name}
-                </p>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {new Date(r.createdAt).toLocaleDateString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </p>
-              </button>
-            ))}
+            {savedReports.map((r) => {
+              const name = r.profile.name || "Anonymous"
+              const savedOn = formatSavedDate(r.createdAt)
+              const pendingDelete = pendingDeleteId === r.id
+              const confirmId = `delete-saved-report-${r.id}`
+
+              return (
+                <article
+                  key={r.id}
+                  className="rounded-xl border border-border bg-card transition-colors hover:border-primary/50 hover:bg-secondary/50"
+                  onKeyDown={(event) => {
+                    if (event.key === "Escape" && pendingDelete) setPendingDeleteId(null)
+                  }}
+                >
+                  <div className="flex items-start gap-1 p-4">
+                    <button
+                      type="button"
+                      onClick={() => onViewSaved(r.id)}
+                      className="min-w-0 flex-1 rounded-lg text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                    >
+                      <p className="font-medium">{name}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        Top match: {r.report.majors[0]?.major.name}
+                      </p>
+                      <p className="mt-2 text-xs text-muted-foreground">{savedOn}</p>
+                    </button>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="shrink-0 text-muted-foreground hover:text-destructive"
+                      aria-label={`Delete saved report for ${name}, ${savedOn}`}
+                      aria-expanded={pendingDelete}
+                      aria-controls={pendingDelete ? confirmId : undefined}
+                      onClick={() =>
+                        setPendingDeleteId((current) => (current === r.id ? null : r.id))
+                      }
+                    >
+                      <Trash2 aria-hidden />
+                    </Button>
+                  </div>
+                  {pendingDelete && (
+                    <div
+                      id={confirmId}
+                      role="group"
+                      aria-label={`Confirm deleting the saved report for ${name}`}
+                      className="border-t border-border px-4 py-3"
+                    >
+                      <p className="text-sm">
+                        Delete this saved report? This only removes it from this browser.
+                      </p>
+                      <div className="mt-3 flex gap-2">
+                        <Button variant="outline" size="sm" onClick={() => setPendingDeleteId(null)}>
+                          Cancel
+                        </Button>
+                        <Button variant="destructive" size="sm" onClick={() => confirmDelete(r.id)}>
+                          Delete
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </article>
+              )
+            })}
           </div>
         </div>
       )}
