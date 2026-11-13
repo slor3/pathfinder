@@ -4,12 +4,14 @@ import { useEffect, useMemo, useState } from "react"
 import { Compass } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LandingScreen } from "./landing-screen"
+import { LoginScreen } from "./login-screen"
 import { ProfileScreen } from "./profile-screen"
 import { QuizScreen } from "./quiz-screen"
 import { ReportScreen } from "./report-screen"
 import { ResearchScreen } from "./research-screen"
 import { SignUpScreen } from "./sign-up-screen"
 import { useFirebaseUser } from "./use-firebase-user"
+import { signOutCurrentUser, signOutErrorMessage } from "@/lib/firebase"
 import { generateReport, type Answers, type PathwayAnswers, type Report } from "@/lib/recommend"
 import {
   loadProfile,
@@ -20,7 +22,7 @@ import {
   type SavedReport,
 } from "@/lib/storage"
 
-type Stage = "landing" | "research" | "profile" | "quiz" | "report" | "signup"
+type Stage = "landing" | "research" | "profile" | "quiz" | "report" | "signup" | "login"
 
 export function PathfinderApp() {
   const [stage, setStage] = useState<Stage>("landing")
@@ -30,7 +32,11 @@ export function PathfinderApp() {
   const [report, setReport] = useState<Report | null>(null)
   const [savedReports, setSavedReports] = useState<SavedReport[]>([])
   const [savedCurrent, setSavedCurrent] = useState(false)
-  const user = useFirebaseUser()
+  const [signingOut, setSigningOut] = useState(false)
+  const [signOutError, setSignOutError] = useState<string | null>(null)
+  const [accountReturn, setAccountReturn] = useState<Stage>("landing")
+  const { user, ready: authReady } = useFirebaseUser()
+  const signedIn = Boolean(user)
 
   // Hydrate persisted state after mount — localStorage is not available during SSR.
   useEffect(() => {
@@ -62,8 +68,17 @@ export function PathfinderApp() {
     setStage("report")
   }
 
+  function openAccount(next: "login" | "signup") {
+    if (stage === "quiz" || stage === "profile" || stage === "report") {
+      setAccountReturn(stage)
+    } else if (stage !== "login" && stage !== "signup") {
+      setAccountReturn("landing")
+    }
+    setStage(next)
+  }
+
   function handleSave() {
-    if (!report || !profile) return
+    if (!signedIn || !report || !profile) return
     const entry: SavedReport = {
       id: `${Date.now()}`,
       createdAt: Date.now(),
@@ -82,6 +97,18 @@ export function PathfinderApp() {
     setReport(null)
     setSavedCurrent(false)
     setStage("quiz")
+  }
+
+  function handleSignOut() {
+    setSignOutError(null)
+    setSigningOut(true)
+    void signOutCurrentUser()
+      .catch((error: unknown) => {
+        setSignOutError(signOutErrorMessage(error))
+      })
+      .finally(() => {
+        setSigningOut(false)
+      })
   }
 
   function viewSaved(id: string) {
@@ -108,20 +135,30 @@ export function PathfinderApp() {
             </span>
             PathFinder
           </button>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
             {user?.email ? (
-              <button
-                type="button"
-                onClick={() => setStage("signup")}
-                className="max-w-[9rem] truncate text-sm text-muted-foreground hover:text-foreground sm:max-w-xs"
-                title={user.email}
-              >
-                {user.email}
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => openAccount("login")}
+                  className="max-w-[9rem] truncate text-sm text-muted-foreground hover:text-foreground sm:max-w-xs"
+                  title={user.email}
+                >
+                  {user.email}
+                </button>
+                <Button variant="outline" onClick={handleSignOut} disabled={signingOut}>
+                  {signingOut ? "Signing out…" : "Sign out"}
+                </Button>
+              </>
             ) : (
-              <Button variant="outline" onClick={() => setStage("signup")}>
-                Create account
-              </Button>
+              <>
+                <Button variant="ghost" onClick={() => openAccount("login")}>
+                  Log in
+                </Button>
+                <Button variant="outline" onClick={() => openAccount("signup")}>
+                  Create account
+                </Button>
+              </>
             )}
             {savedReports.length > 0 && (
               <span className="text-sm text-muted-foreground">
@@ -130,6 +167,11 @@ export function PathfinderApp() {
             )}
           </div>
         </div>
+        {signOutError && (
+          <p className="mx-auto max-w-5xl px-4 pb-3 text-sm text-destructive" role="alert">
+            {signOutError}
+          </p>
+        )}
       </header>
 
       <main>
@@ -145,24 +187,43 @@ export function PathfinderApp() {
         {stage === "signup" && (
           <SignUpScreen
             signedInEmail={user?.email ?? null}
-            onBack={() => setStage("landing")}
+            onBack={() => setStage(accountReturn)}
             onStartQuiz={startFlow}
+            onLogIn={() => openAccount("login")}
+            onSignOut={handleSignOut}
+            signingOut={signingOut}
           />
         )}
-        {stage === "profile" && (
-          <ProfileScreen
-            initial={activeProfile}
-            onContinue={handleProfile}
-            onBack={() => setStage("landing")}
+        {stage === "login" && (
+          <LoginScreen
+            signedInEmail={user?.email ?? null}
+            onBack={() => setStage(accountReturn)}
+            onStartQuiz={startFlow}
+            onCreateAccount={() => openAccount("signup")}
+            onSignOut={handleSignOut}
+            signingOut={signingOut}
           />
         )}
-        {stage === "quiz" && (
-          <QuizScreen
-            initial={answers}
-            initialPathway={pathwayAnswers}
-            onComplete={handleQuizComplete}
-            onExit={() => setStage("landing")}
-          />
+        {(stage === "profile" ||
+          (accountReturn === "profile" && (stage === "login" || stage === "signup"))) && (
+          <div className={stage === "profile" ? undefined : "hidden"}>
+            <ProfileScreen
+              initial={activeProfile}
+              onContinue={handleProfile}
+              onBack={() => setStage("landing")}
+            />
+          </div>
+        )}
+        {(stage === "quiz" ||
+          (accountReturn === "quiz" && (stage === "login" || stage === "signup"))) && (
+          <div className={stage === "quiz" ? undefined : "hidden"}>
+            <QuizScreen
+              initial={answers}
+              initialPathway={pathwayAnswers}
+              onComplete={handleQuizComplete}
+              onExit={() => setStage("landing")}
+            />
+          </div>
         )}
         {stage === "report" && report && profile && (
           <ReportScreen
@@ -171,6 +232,10 @@ export function PathfinderApp() {
             onRetake={handleRetake}
             onSave={handleSave}
             saved={savedCurrent}
+            canSave={signedIn}
+            saveNeedsAccount={authReady && !signedIn}
+            onLogIn={() => openAccount("login")}
+            onCreateAccount={() => openAccount("signup")}
             onHome={() => setStage("landing")}
           />
         )}

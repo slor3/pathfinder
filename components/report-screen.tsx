@@ -35,6 +35,10 @@ type Props = {
   onRetake: () => void
   onSave: () => void
   saved: boolean
+  canSave: boolean
+  saveNeedsAccount: boolean
+  onLogIn: () => void
+  onCreateAccount: () => void
   onHome: () => void
 }
 
@@ -48,7 +52,18 @@ function formatCompletionRate(rate: number | null): string {
   return `${Math.round(rate * 100)}%`
 }
 
-export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome }: Props) {
+export function ReportScreen({
+  report,
+  profile,
+  onRetake,
+  onSave,
+  saved,
+  canSave,
+  saveNeedsAccount,
+  onLogIn,
+  onCreateAccount,
+  onHome,
+}: Props) {
   const [compare, setCompare] = useState<string[]>([])
   const [showStemDetails, setShowStemDetails] = useState(false)
   const topMajors = report.majors.slice(0, 3)
@@ -66,7 +81,7 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 md:py-14">
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
             <Sparkles className="size-4" aria-hidden />
@@ -76,15 +91,46 @@ export function ReportScreen({ report, profile, onRetake, onSave, saved, onHome 
             {profile.name ? `${profile.name}, here's your direction` : "Here's your direction"}
           </h1>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" className="gap-2" onClick={onSave} disabled={saved}>
-            {saved ? <Check className="size-4" /> : <Bookmark className="size-4" />}
-            {saved ? "Saved" : "Save report"}
-          </Button>
-          <Button variant="ghost" className="gap-2" onClick={onRetake}>
-            <RotateCcw className="size-4" aria-hidden />
-            Retake
-          </Button>
+        <div className="flex flex-col items-start gap-2 sm:items-end">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => {
+                if (!canSave || saved) return
+                onSave()
+              }}
+              disabled={!canSave || saved}
+              aria-describedby={saveNeedsAccount && !saved ? "save-account-hint" : undefined}
+            >
+              {saved ? <Check className="size-4" /> : <Bookmark className="size-4" />}
+              {saved ? "Saved" : "Save report"}
+            </Button>
+            <Button variant="ghost" className="gap-2" onClick={onRetake}>
+              <RotateCcw className="size-4" aria-hidden />
+              Retake
+            </Button>
+          </div>
+          {saveNeedsAccount && !saved && (
+            <p id="save-account-hint" className="max-w-xs text-sm text-muted-foreground sm:text-right">
+              <button
+                type="button"
+                className="font-medium text-primary underline-offset-4 hover:underline"
+                onClick={onCreateAccount}
+              >
+                Create an account
+              </button>{" "}
+              or{" "}
+              <button
+                type="button"
+                className="font-medium text-primary underline-offset-4 hover:underline"
+                onClick={onLogIn}
+              >
+                log in
+              </button>{" "}
+              to save this report.
+            </p>
+          )}
         </div>
       </div>
 

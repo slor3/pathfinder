@@ -1,5 +1,12 @@
 import { FirebaseError, getApps, initializeApp, type FirebaseApp } from "firebase/app"
-import { createUserWithEmailAndPassword, getAuth, type Auth, type UserCredential } from "firebase/auth"
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  type Auth,
+  type UserCredential,
+} from "firebase/auth"
 
 /**
  * Web app config from Firebase console → Project settings → Your apps.
@@ -18,6 +25,11 @@ export type SignUpFieldErrors = {
   email?: string
   password?: string
   confirmPassword?: string
+}
+
+export type LoginFieldErrors = {
+  email?: string
+  password?: string
 }
 
 export class FirebaseConfigError extends Error {
@@ -61,19 +73,21 @@ export function getFirebaseAuth(): Auth | null {
   return getAuth(getFirebaseApp(config))
 }
 
+function emailFieldError(email: string): string | undefined {
+  const trimmed = email.trim()
+  if (!trimmed) return "Enter your email."
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return "Enter a valid email address."
+  return undefined
+}
+
 export function validateSignUpInput(input: {
   email: string
   password: string
   confirmPassword: string
 }): SignUpFieldErrors {
   const errors: SignUpFieldErrors = {}
-  const email = input.email.trim()
-
-  if (!email) {
-    errors.email = "Enter your email."
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errors.email = "Enter a valid email address."
-  }
+  const emailError = emailFieldError(input.email)
+  if (emailError) errors.email = emailError
 
   if (!input.password) {
     errors.password = "Enter a password."
@@ -90,10 +104,30 @@ export function validateSignUpInput(input: {
   return errors
 }
 
+export function validateLoginInput(input: { email: string; password: string }): LoginFieldErrors {
+  const errors: LoginFieldErrors = {}
+  const emailError = emailFieldError(input.email)
+  if (emailError) errors.email = emailError
+  if (!input.password) errors.password = "Enter your password."
+  return errors
+}
+
 export async function createEmailAccount(email: string, password: string): Promise<UserCredential> {
   const auth = getFirebaseAuth()
   if (!auth) throw new FirebaseConfigError()
   return createUserWithEmailAndPassword(auth, email.trim(), password)
+}
+
+export async function signInWithEmail(email: string, password: string): Promise<UserCredential> {
+  const auth = getFirebaseAuth()
+  if (!auth) throw new FirebaseConfigError()
+  return signInWithEmailAndPassword(auth, email.trim(), password)
+}
+
+export async function signOutCurrentUser(): Promise<void> {
+  const auth = getFirebaseAuth()
+  if (!auth) throw new FirebaseConfigError()
+  await signOut(auth)
 }
 
 export function signUpErrorMessage(error: unknown): string {
@@ -121,4 +155,48 @@ export function signUpErrorMessage(error: unknown): string {
   }
 
   return "Could not create the account. Try again."
+}
+
+export function signInErrorMessage(error: unknown): string {
+  if (error instanceof FirebaseConfigError) {
+    return "Log in is not set up yet. Add the Firebase keys from .env.example to .env.local, then restart the app."
+  }
+
+  if (error instanceof FirebaseError) {
+    switch (error.code) {
+      case "auth/wrong-password":
+        return "That password is not right."
+      case "auth/user-not-found":
+        return "No account uses that email."
+      case "auth/invalid-credential":
+      case "auth/invalid-login-credentials":
+        return "That email or password is not right."
+      case "auth/invalid-email":
+        return "Enter a valid email address."
+      case "auth/user-disabled":
+        return "This account is disabled."
+      case "auth/operation-not-allowed":
+        return "Email and password sign-in is turned off in Firebase. Enable the Email/Password provider, then try again."
+      case "auth/network-request-failed":
+        return "Could not reach Firebase. Check your connection and try again."
+      case "auth/too-many-requests":
+        return "Too many attempts. Wait a moment and try again."
+      default:
+        return "Could not log in. Try again."
+    }
+  }
+
+  return "Could not log in. Try again."
+}
+
+export function signOutErrorMessage(error: unknown): string {
+  if (error instanceof FirebaseConfigError) {
+    return "Sign out is not set up yet. Add the Firebase keys from .env.example to .env.local, then restart the app."
+  }
+
+  if (error instanceof FirebaseError && error.code === "auth/network-request-failed") {
+    return "Could not reach Firebase. Check your connection and try again."
+  }
+
+  return "Could not sign out. Try again."
 }
