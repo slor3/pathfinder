@@ -45,7 +45,7 @@ export function SignUpScreen({
     return (
       <AccountSignedIn
         email={activeEmail}
-        title={rememberedHere ? "Account created" : "You\u2019re signed in"}
+        title={rememberedHere ? "Account created" : "You're signed in"}
         onBack={onBack}
         onStartQuiz={onStartQuiz}
         onSignOut={onSignOut}

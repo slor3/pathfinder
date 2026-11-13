@@ -7,6 +7,7 @@ import {
   type Auth,
   type UserCredential,
 } from "firebase/auth"
+import { getFirestore, type Firestore } from "firebase/firestore"
 
 /**
  * Web app config from Firebase console → Project settings → Your apps.
@@ -199,4 +200,14 @@ export function signOutErrorMessage(error: unknown): string {
   }
 
   return "Could not sign out. Try again."
+}
+
+
+export function getFirebaseFirestore(): Firestore {
+  if (typeof window === "undefined") throw new FirebaseConfigError()
+
+  const config = readFirebaseWebConfig()
+  if (!config) throw new FirebaseConfigError()
+
+  return getFirestore(getFirebaseApp(config))
 }

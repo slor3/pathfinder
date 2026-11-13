@@ -33,7 +33,9 @@ type Props = {
   report: Report
   profile: Profile
   onRetake: () => void
-  onSave: () => void
+  onSave: () => void | Promise<void>
+  saving: boolean
+  saveError: string | null
   saved: boolean
   canSave: boolean
   saveNeedsAccount: boolean
@@ -57,6 +59,8 @@ export function ReportScreen({
   profile,
   onRetake,
   onSave,
+  saving,
+  saveError,
   saved,
   canSave,
   saveNeedsAccount,
@@ -100,17 +104,18 @@ export function ReportScreen({
                 if (!canSave || saved) return
                 onSave()
               }}
-              disabled={!canSave || saved}
+              disabled={!canSave || saved || saving}
               aria-describedby={saveNeedsAccount && !saved ? "save-account-hint" : undefined}
             >
               {saved ? <Check className="size-4" /> : <Bookmark className="size-4" />}
-              {saved ? "Saved" : "Save report"}
+              {saved ? "Saved" : saving ? "Saving…" : "Save report"}
             </Button>
             <Button variant="ghost" className="gap-2" onClick={onRetake}>
               <RotateCcw className="size-4" aria-hidden />
               Retake
             </Button>
           </div>
+          {saveError && <p className="text-sm text-destructive" role="alert">{saveError}</p>}
           {saveNeedsAccount && !saved && (
             <p id="save-account-hint" className="max-w-xs text-sm text-muted-foreground sm:text-right">
               <button
