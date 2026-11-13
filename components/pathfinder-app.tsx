@@ -13,13 +13,16 @@ import { ResearchScreen } from "./research-screen"
 import { SignUpScreen } from "./sign-up-screen"
 import { useFirebaseUser } from "./use-firebase-user"
 import { signOutCurrentUser, signOutErrorMessage } from "@/lib/firebase"
+import {
+  deleteFirebaseReport,
+  loadFirebaseReports,
+  saveFirebaseReport,
+  savedReportErrorMessage,
+} from "@/lib/firebase-saved-reports"
 import { generateReport, type Answers, type PathwayAnswers, type Report } from "@/lib/recommend"
 import {
-  deleteReport,
   loadProfile,
-  loadSavedReports,
   saveProfile,
-  saveReport,
   type Profile,
   type SavedReport,
 } from "@/lib/storage"
@@ -33,7 +36,11 @@ export function PathfinderApp() {
   const [pathwayAnswers, setPathwayAnswers] = useState<PathwayAnswers | undefined>()
   const [report, setReport] = useState<Report | null>(null)
   const [savedReports, setSavedReports] = useState<SavedReport[]>([])
+  const [savedReportsUserId, setSavedReportsUserId] = useState<string | null>(null)
+  const [savedReportsLoading, setSavedReportsLoading] = useState(false)
+  const [savedReportsError, setSavedReportsError] = useState<string | null>(null)
   const [savedCurrent, setSavedCurrent] = useState(false)
+  const [savingReport, setSavingReport] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [signOutError, setSignOutError] = useState<string | null>(null)
   const [accountReturn, setAccountReturn] = useState<Stage>("landing")
@@ -44,9 +51,44 @@ export function PathfinderApp() {
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect -- client-only storage hydrate */
     setProfile(loadProfile())
-    setSavedReports(loadSavedReports())
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [])
+
+  useEffect(() => {
+    if (!authReady) return
+
+    let cancelled = false
+    /* eslint-disable react-hooks/set-state-in-effect -- clear reports when account identity changes */
+    setSavedReports([])
+    setSavedReportsUserId(null)
+    setSavedReportsError(null)
+    setSavedCurrent(false)
+    setSavedReportsLoading(Boolean(user))
+    /* eslint-enable react-hooks/set-state-in-effect */
+
+    if (user) {
+      void loadFirebaseReports(user.uid)
+        .then((reports) => {
+          if (!cancelled) {
+            setSavedReports(reports)
+            setSavedReportsUserId(user.uid)
+          }
+        })
+        .catch((error: unknown) => {
+          if (!cancelled) setSavedReportsError(savedReportErrorMessage(error))
+        })
+        .finally(() => {
+          if (!cancelled) setSavedReportsLoading(false)
+        })
+    }
+
+    return () => {
+      cancelled = true
+    }
+  }, [authReady, user])
+
+  const ownedSavedReports =
+    user && savedReportsUserId === user.uid ? savedReports : []
 
   const activeProfile = useMemo(() => profile, [profile])
 
@@ -79,8 +121,10 @@ export function PathfinderApp() {
     setStage(next)
   }
 
-  function handleSave() {
-    if (!signedIn || !report || !profile) return
+  async function handleSave() {
+    if (!user || !report || !profile) return
+    setSavedReportsError(null)
+    setSavingReport(true)
     const entry: SavedReport = {
       id: `${Date.now()}`,
       createdAt: Date.now(),
@@ -89,8 +133,16 @@ export function PathfinderApp() {
       pathwayAnswers,
       report,
     }
-    setSavedReports(saveReport(entry))
-    setSavedCurrent(true)
+    try {
+      const savedEntry = await saveFirebaseReport(user.uid, entry)
+      setSavedReports((existing) => [savedEntry, ...existing].slice(0, 10))
+      setSavedReportsUserId(user.uid)
+      setSavedCurrent(true)
+    } catch (error: unknown) {
+      setSavedReportsError(savedReportErrorMessage(error))
+    } finally {
+      setSavingReport(false)
+    }
   }
 
   function handleRetake() {
@@ -114,7 +166,7 @@ export function PathfinderApp() {
   }
 
   function viewSaved(id: string) {
-    const found = savedReports.find((r) => r.id === id)
+    const found = ownedSavedReports.find((r) => r.id === id)
     if (!found) return
     setProfile(found.profile)
     setAnswers(found.answers)
@@ -124,8 +176,17 @@ export function PathfinderApp() {
     setStage("report")
   }
 
-  function handleDeleteSaved(id: string) {
-    setSavedReports(deleteReport(id))
+  async function handleDeleteSaved(id: string): Promise<boolean> {
+    if (!user) return false
+    setSavedReportsError(null)
+    try {
+      await deleteFirebaseReport(user.uid, id)
+      setSavedReports((existing) => existing.filter((savedReport) => savedReport.id !== id))
+      return true
+    } catch (error: unknown) {
+      setSavedReportsError(savedReportErrorMessage(error))
+      return false
+    }
   }
 
   return (
@@ -166,9 +227,9 @@ export function PathfinderApp() {
                 </Button>
               </>
             )}
-            {savedReports.length > 0 && (
+            {ownedSavedReports.length > 0 && (
               <span className="text-sm text-muted-foreground">
-                {savedReports.length} saved report{savedReports.length > 1 ? "s" : ""}
+                {ownedSavedReports.length} saved report{ownedSavedReports.length > 1 ? "s" : ""}
               </span>
             )}
           </div>
@@ -185,7 +246,10 @@ export function PathfinderApp() {
           <LandingScreen
             onStart={startFlow}
             onResearch={() => setStage("research")}
-            savedReports={savedReports}
+            savedReports={ownedSavedReports}
+            savedReportsLoading={savedReportsLoading}
+            savedReportsError={savedReportsError}
+            signedIn={signedIn}
             onViewSaved={viewSaved}
             onDeleteSaved={handleDeleteSaved}
           />
@@ -241,6 +305,8 @@ export function PathfinderApp() {
             profile={profile}
             onRetake={handleRetake}
             onSave={handleSave}
+            saving={savingReport}
+            saveError={savedReportsError}
             saved={savedCurrent}
             canSave={signedIn}
             saveNeedsAccount={authReady && !signedIn}

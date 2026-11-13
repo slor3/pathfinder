@@ -44,7 +44,7 @@ export function LoginScreen({
     return (
       <AccountSignedIn
         email={activeEmail}
-        title="You\u2019re signed in"
+        title="You're signed in"
         onBack={onBack}
         onStartQuiz={onStartQuiz}
         onSignOut={onSignOut}

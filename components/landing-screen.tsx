@@ -19,8 +19,11 @@ type Props = {
   onStart: () => void
   onResearch: () => void
   savedReports: SavedReport[]
+  savedReportsLoading: boolean
+  savedReportsError: string | null
+  signedIn: boolean
   onViewSaved: (id: string) => void
-  onDeleteSaved: (id: string) => void
+  onDeleteSaved: (id: string) => Promise<boolean>
 }
 
 function formatSavedDate(createdAt: number): string {
@@ -53,14 +56,23 @@ export function LandingScreen({
   onStart,
   onResearch,
   savedReports,
+  savedReportsLoading,
+  savedReportsError,
+  signedIn,
   onViewSaved,
   onDeleteSaved,
 }: Props) {
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
-  function confirmDelete(id: string) {
-    onDeleteSaved(id)
-    setPendingDeleteId((current) => (current === id ? null : current))
+  async function confirmDelete(id: string) {
+    setDeletingId(id)
+    try {
+      const deleted = await onDeleteSaved(id)
+      if (deleted) setPendingDeleteId((current) => (current === id ? null : current))
+    } finally {
+      setDeletingId(null)
+    }
   }
 
   return (
@@ -120,11 +132,23 @@ export function LandingScreen({
         </Card>
       </div>
 
-      {savedReports.length > 0 && (
+      {(signedIn || savedReports.length > 0 || savedReportsLoading || savedReportsError) && (
         <div className="mt-14">
           <h2 className="mb-4 font-display text-xl font-semibold">Your saved reports</h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {savedReports.map((r) => {
+          {savedReportsLoading && (
+            <p className="text-sm text-muted-foreground">Loading saved reports…</p>
+          )}
+          {savedReportsError && (
+            <p className="mb-3 text-sm text-destructive" role="alert">
+              {savedReportsError}
+            </p>
+          )}
+          {!savedReportsLoading && signedIn && savedReports.length === 0 && !savedReportsError && (
+            <p className="text-sm text-muted-foreground">You haven’t saved any reports yet.</p>
+          )}
+          {savedReports.length > 0 && (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {savedReports.map((r) => {
               const name = r.profile.name || "Anonymous"
               const savedOn = formatSavedDate(r.createdAt)
               const pendingDelete = pendingDeleteId === r.id
@@ -172,22 +196,33 @@ export function LandingScreen({
                       className="border-t border-border px-4 py-3"
                     >
                       <p className="text-sm">
-                        Delete this saved report? This only removes it from this browser.
+                        Delete this saved report from your account?
                       </p>
                       <div className="mt-3 flex gap-2">
-                        <Button variant="outline" size="sm" onClick={() => setPendingDeleteId(null)}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={deletingId === r.id}
+                          onClick={() => setPendingDeleteId(null)}
+                        >
                           Cancel
                         </Button>
-                        <Button variant="destructive" size="sm" onClick={() => confirmDelete(r.id)}>
-                          Delete
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          disabled={deletingId === r.id}
+                          onClick={() => void confirmDelete(r.id)}
+                        >
+                          {deletingId === r.id ? "Deleting…" : "Delete"}
                         </Button>
                       </div>
                     </div>
                   )}
                 </article>
               )
-            })}
-          </div>
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
