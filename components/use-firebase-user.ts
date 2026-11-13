@@ -2,18 +2,22 @@
 
 import { useEffect, useState } from "react"
 import { onAuthStateChanged, type User } from "firebase/auth"
-import { getFirebaseAuth } from "@/lib/firebase"
+import { getFirebaseAuth, isFirebaseConfigured } from "@/lib/firebase"
 
 export function useFirebaseUser() {
   const [user, setUser] = useState<User | null>(null)
+  const [ready, setReady] = useState(() => !isFirebaseConfigured())
 
   useEffect(() => {
     const auth = getFirebaseAuth()
     if (!auth) return
-    return onAuthStateChanged(auth, setUser)
+    return onAuthStateChanged(auth, (next) => {
+      setUser(next)
+      setReady(true)
+    })
   }, [])
 
-  return user
+  return { user, ready }
 }
 
 /**

@@ -52,7 +52,7 @@ The quiz runs with no `.env` file. Email sign-up, log in, and sign out need Fire
 4. Restart `pnpm dev`.
 5. Choose **Create account** to register, **Log in** to open an existing account, and **Sign out** in the header when you are done.
 
-A wrong password, or an email with no account, stays on the log-in form and shows an error. The quiz still runs after sign out, and with no account at all.
+A wrong password, or an email with no account, stays on the log-in form and shows an error. The quiz still runs after sign out, and with no account at all. Saving a report needs a signed-in account. Until then, Save stays off and asks the student to create an account or log in. That does not erase the quiz.
 
 `localhost` is an authorized domain by default. For the deployed site, add `pathfinder-iota-mauve.vercel.app` under Authentication → Settings → Authorized domains. Do not include `https://` or a port. The same six variables belong in the Vercel project if accounts should work there. `measurementId` is not used.
 

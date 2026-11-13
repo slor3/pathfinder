@@ -34,7 +34,9 @@ export function PathfinderApp() {
   const [savedCurrent, setSavedCurrent] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [signOutError, setSignOutError] = useState<string | null>(null)
-  const user = useFirebaseUser()
+  const [accountReturn, setAccountReturn] = useState<Stage>("landing")
+  const { user, ready: authReady } = useFirebaseUser()
+  const signedIn = Boolean(user)
 
   // Hydrate persisted state after mount — localStorage is not available during SSR.
   useEffect(() => {
@@ -66,8 +68,17 @@ export function PathfinderApp() {
     setStage("report")
   }
 
+  function openAccount(next: "login" | "signup") {
+    if (stage === "quiz" || stage === "profile" || stage === "report") {
+      setAccountReturn(stage)
+    } else if (stage !== "login" && stage !== "signup") {
+      setAccountReturn("landing")
+    }
+    setStage(next)
+  }
+
   function handleSave() {
-    if (!report || !profile) return
+    if (!signedIn || !report || !profile) return
     const entry: SavedReport = {
       id: `${Date.now()}`,
       createdAt: Date.now(),
@@ -129,7 +140,7 @@ export function PathfinderApp() {
               <>
                 <button
                   type="button"
-                  onClick={() => setStage("login")}
+                  onClick={() => openAccount("login")}
                   className="max-w-[9rem] truncate text-sm text-muted-foreground hover:text-foreground sm:max-w-xs"
                   title={user.email}
                 >
@@ -141,10 +152,10 @@ export function PathfinderApp() {
               </>
             ) : (
               <>
-                <Button variant="ghost" onClick={() => setStage("login")}>
+                <Button variant="ghost" onClick={() => openAccount("login")}>
                   Log in
                 </Button>
-                <Button variant="outline" onClick={() => setStage("signup")}>
+                <Button variant="outline" onClick={() => openAccount("signup")}>
                   Create account
                 </Button>
               </>
@@ -176,9 +187,9 @@ export function PathfinderApp() {
         {stage === "signup" && (
           <SignUpScreen
             signedInEmail={user?.email ?? null}
-            onBack={() => setStage("landing")}
+            onBack={() => setStage(accountReturn)}
             onStartQuiz={startFlow}
-            onLogIn={() => setStage("login")}
+            onLogIn={() => openAccount("login")}
             onSignOut={handleSignOut}
             signingOut={signingOut}
           />
@@ -186,27 +197,33 @@ export function PathfinderApp() {
         {stage === "login" && (
           <LoginScreen
             signedInEmail={user?.email ?? null}
-            onBack={() => setStage("landing")}
+            onBack={() => setStage(accountReturn)}
             onStartQuiz={startFlow}
-            onCreateAccount={() => setStage("signup")}
+            onCreateAccount={() => openAccount("signup")}
             onSignOut={handleSignOut}
             signingOut={signingOut}
           />
         )}
-        {stage === "profile" && (
-          <ProfileScreen
-            initial={activeProfile}
-            onContinue={handleProfile}
-            onBack={() => setStage("landing")}
-          />
+        {(stage === "profile" ||
+          (accountReturn === "profile" && (stage === "login" || stage === "signup"))) && (
+          <div className={stage === "profile" ? undefined : "hidden"}>
+            <ProfileScreen
+              initial={activeProfile}
+              onContinue={handleProfile}
+              onBack={() => setStage("landing")}
+            />
+          </div>
         )}
-        {stage === "quiz" && (
-          <QuizScreen
-            initial={answers}
-            initialPathway={pathwayAnswers}
-            onComplete={handleQuizComplete}
-            onExit={() => setStage("landing")}
-          />
+        {(stage === "quiz" ||
+          (accountReturn === "quiz" && (stage === "login" || stage === "signup"))) && (
+          <div className={stage === "quiz" ? undefined : "hidden"}>
+            <QuizScreen
+              initial={answers}
+              initialPathway={pathwayAnswers}
+              onComplete={handleQuizComplete}
+              onExit={() => setStage("landing")}
+            />
+          </div>
         )}
         {stage === "report" && report && profile && (
           <ReportScreen
@@ -215,6 +232,10 @@ export function PathfinderApp() {
             onRetake={handleRetake}
             onSave={handleSave}
             saved={savedCurrent}
+            canSave={signedIn}
+            saveNeedsAccount={authReady && !signedIn}
+            onLogIn={() => openAccount("login")}
+            onCreateAccount={() => openAccount("signup")}
             onHome={() => setStage("landing")}
           />
         )}
