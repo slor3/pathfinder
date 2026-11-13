@@ -186,7 +186,7 @@ export function QuizScreen({ initial, initialPathway, onComplete, onExit }: Prop
       <div className="mt-6 flex items-center justify-between">
         <Button variant="ghost" className="gap-2" onClick={back}>
           <ArrowLeft className="size-4" aria-hidden />
-          {index === 0 && !isPathway ? "Exit" : "Back"}
+          Back
         </Button>
         <Button className="gap-2" disabled={!selected} onClick={next}>
           {isLast ? "See my report" : "Next"}

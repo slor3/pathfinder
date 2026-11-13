@@ -163,3 +163,44 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Quiz intro diagram. Scoped so the rest of the app is unchanged. */
+@keyframes quiz-intro-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.65rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes quiz-intro-draw-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.quiz-intro-step {
+  opacity: 0;
+  animation: quiz-intro-enter 0.48s ease forwards;
+}
+
+.quiz-intro-line-y {
+  transform-origin: top center;
+  transform: scaleY(0);
+  animation: quiz-intro-draw-y 0.32s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quiz-intro .quiz-intro-step,
+  .quiz-intro .quiz-intro-line-y {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}

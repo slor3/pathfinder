@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { LandingScreen } from "./landing-screen"
 import { LoginScreen } from "./login-screen"
 import { ProfileScreen } from "./profile-screen"
+import { QuizIntroScreen } from "./quiz-intro-screen"
 import { QuizScreen } from "./quiz-screen"
 import { ReportScreen } from "./report-screen"
 import { ResearchScreen } from "./research-screen"
@@ -23,7 +24,7 @@ import {
   type SavedReport,
 } from "@/lib/storage"
 
-type Stage = "landing" | "research" | "profile" | "quiz" | "report" | "signup" | "login"
+type Stage = "landing" | "research" | "profile" | "intro" | "quiz" | "report" | "signup" | "login"
 
 export function PathfinderApp() {
   const [stage, setStage] = useState<Stage>("landing")
@@ -56,7 +57,7 @@ export function PathfinderApp() {
   function handleProfile(p: Profile) {
     setProfile(p)
     saveProfile(p)
-    setStage("quiz")
+    setStage("intro")
   }
 
   function handleQuizComplete(finalAnswers: Answers, finalPathwayAnswers: PathwayAnswers) {
@@ -70,7 +71,7 @@ export function PathfinderApp() {
   }
 
   function openAccount(next: "login" | "signup") {
-    if (stage === "quiz" || stage === "profile" || stage === "report") {
+    if (stage === "quiz" || stage === "profile" || stage === "intro" || stage === "report") {
       setAccountReturn(stage)
     } else if (stage !== "login" && stage !== "signup") {
       setAccountReturn("landing")
@@ -97,7 +98,7 @@ export function PathfinderApp() {
     setPathwayAnswers(undefined)
     setReport(null)
     setSavedCurrent(false)
-    setStage("quiz")
+    setStage("intro")
   }
 
   function handleSignOut() {
@@ -220,6 +221,9 @@ export function PathfinderApp() {
             />
           </div>
         )}
+        {stage === "intro" && (
+          <QuizIntroScreen onContinue={() => setStage("quiz")} onBack={() => setStage("profile")} />
+        )}
         {(stage === "quiz" ||
           (accountReturn === "quiz" && (stage === "login" || stage === "signup"))) && (
           <div className={stage === "quiz" ? undefined : "hidden"}>
@@ -227,7 +231,7 @@ export function PathfinderApp() {
               initial={answers}
               initialPathway={pathwayAnswers}
               onComplete={handleQuizComplete}
-              onExit={() => setStage("landing")}
+              onExit={() => setStage("intro")}
             />
           </div>
         )}
